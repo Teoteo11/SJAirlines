@@ -1,72 +1,110 @@
 import express from "express"
 import bodyParser from "body-parser";
+import {Ticket, Company} from "./../index"
+import { RSA_NO_PADDING } from "constants";
 
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-class Ticket {
-    static counter = 0;
 
-    constructor(public id_company : Number, public id_ticket : Number, public id_flight : Number, public isChecked : Boolean){
 
+
+let exampleJSON = [{"id" : 1, "tickets": [{id_company : 1,id_ticket : 1,id_flight : 1,isChecked : false}]}];
+let exampleJSON3 = [{id_company : 1,id_ticket : 1,id_flight : 1,isChecked : false}] 
+
+
+let exampleJSON2 = [{"id": 1, "airplanes": [{"id" : 2, "model" : "dsdssd","num_seats" : 50}]}]
+
+router.post("/",(req,res)=>{
+    if(Number(req.body.id_company) && Number(req.body.id_flight) && Number(req.body.UserId)){
+        //getAllcompany()
+        const company = exampleJSON2.find((company)=>{
+            return company.id === Number(req.body.id_company);
+        });
+        if(company){
+            let airplane = company.airplanes.find((airplane)=>{
+                return req.body.id_flight === airplane.id;
+            });
+            if(airplane){
+                //getAllUser
+                const user = exampleJSON.find((user)=>{
+                    return user.id === req.body.UserId;
+                });
+                if(user){
+                    if(airplane.num_seats !==0){
+                        airplane.num_seats--;
+                        let ticket:Ticket = {
+                            id_company: Number(req.body.id_company),
+                            id_ticket: 1, //generateId()
+                            id_flight: Number(req.body.id_flight),
+                            isChecked: false
+                        };
+                        //addTicketInUser
+                        user.tickets.push(JSON.parse(JSON.stringify(ticket)));
+                        return res.status(200).json(ticket);
+                    }
+                    return res.status(400).json({message:"Airplane full"});
+                }
+                return res.status(400).json({message:"User does not exist"});
+            }
+            return res.status(400).json({message:"Airplane does not exist"});
+        }
+        return res.status(400).json({message:"Company does not exist"});
     }
-}
+    return res.status(400).json({message : "Invalid entry"});
+});
 
-let exampleJSON = {"tickets" : Array<Object>()}; 
-exampleJSON = Object(exampleJSON);
-
-router.post("/",(async(req,res)=>{
-    if(Number(req.body.id_company) && Number(req.body.id_flight)){
-        let ticket = new Ticket(req.body.id_company,Ticket.counter++,req.body.id_flight,false);
-        Object(exampleJSON)["tickets"].push(JSON.parse(JSON.stringify(ticket)));
-        res.status(200).json(ticket);
-        console.log(exampleJSON);
-        return;
-    }
-    res.status(400).json({message : ""})
-}));
-
-router.get("/",(async(req,res)=>{
+router.get("/",(req,res)=>{
+    //getAllTicket
     res.status(200).json(exampleJSON);
-}));
+});
 
-router.get("/:id",(async(req,res)=>{
-    res.json(exampleJSON.tickets.find((ticket:Object)=>{ 
-        return Object(ticket)["id_ticket"] === Number(req.params.id) ; 
-    }));
-    return;
-}));
+router.get("/:id",(req,res)=>{
+    //getAllTicket
+    const ticket = exampleJSON.find((ticket)=>{ 
+        return ticket.id === Number(req.params.id) ; 
+    });
+    if(ticket){
+        return res.status(200).json(ticket);
+    }
+    return res.status(404).json({message: "Ticket not found"});
+});
 
 
-router.put("/:id", (async(req,res)=>{
-    let result = exampleJSON.tickets.find((ticket:Object)=>{
-        if(Object(ticket)["id_ticket"] === Number(req.params.id)){
-            Object(ticket)["isChecked"] = true;
+router.put("/:id",(req,res)=>{
+    //getAllUser
+    const user = exampleJSON.find((user)=>{
+        return user.id === req.body.UserId;
+    });
+    if(user){
+        let result = user.tickets.find((ticket)=>{
+            if(ticket.id_ticket === Number(req.params.id)){
+                ticket.isChecked = true;
+                return true;
+            }
+            return false; 
+        });
+        if(result){
+            return res.json(result);
+        }
+        return res.status(404).json({message : "Ticket does not exist"});
+    }
+});
+
+router.delete("/:id",(req,res)=>{
+    let result = exampleJSON3.find((ticket)=>{
+        if(ticket.id_ticket === Number(req.params.id)){
+            
             return true;
         }
         return false; 
-    })
+    });
     if(result){
         return res.json(result);
     }
     return res.status(404).json({message : "Ticket not found"});
-}));
-
-router.delete("/:id",(async(req,res)=>{
-    let result = exampleJSON.tickets.find((ticket:Object)=>{
-        if(Object(ticket)["id_ticket"] === Number(req.params.id)){
-            const index = exampleJSON.tickets.indexOf(ticket);
-            exampleJSON.tickets.splice(index,1);
-            return true;
-        }
-        return false; 
-    })
-    if(result){
-        return await res.json(result);
-    }
-    return await res.status(404).json({message : "Ticket not found"});
-}));
+});
 
 
 export = router;
