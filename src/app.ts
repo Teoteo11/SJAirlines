@@ -1,5 +1,5 @@
 import express from "express";
-import tickets from "./tickets/tickets"
+import tickets from "./routes/tickets"
 const app = express();
 
 app.use("/tickets",tickets);

@@ -1,18 +1,18 @@
 //Architettura
-interface Ticket {
+export interface Ticket {
     id_company : Number,
     id_ticket : Number,
     id_flight : Number,
     isChecked : Boolean
 }
 
-interface Airplane{
+export interface Airplane{
     id : Number,
     model : String,
     num_seats : Number
 }
 
-interface User {
+export interface User {
     id : Number,
     username : String,
     name : String
@@ -20,7 +20,7 @@ interface User {
     tickets : Array<Ticket> 
 }
 
-interface Flight {
+export interface Flight {
     id : Number,
     departure : String,
     destination : String,
@@ -28,13 +28,13 @@ interface Flight {
     id_airplane : Number
 }
 
-interface Route{
+export interface Route{
     id : Number,
     placeDeparture : String,
     placeDestination : String
 }
 
-interface Company{
+export interface Company{
     id : Number,
     airplanes : Array<Airplane>,
     route : Array<Route>
