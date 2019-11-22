@@ -1,15 +1,15 @@
 //Architettura
 export interface Ticket {
-    id_company : Number,
-    id_ticket : Number,
-    id_flight : Number,
+    idCompany : Number,
+    idTicket : Number,
+    idFlight : Number,
     isChecked : Boolean
 }
 
 export interface Airplane{
     id : Number,
     model : String,
-    num_seats : Number
+    numSeats : Number
 }
 
 export interface User {
@@ -25,7 +25,7 @@ export interface Flight {
     departure : String,
     destination : String,
     duration : Number,
-    id_airplane : Number
+    idAirplane : Number
 }
 
 export interface Route{
@@ -35,7 +35,8 @@ export interface Route{
 }
 
 export interface Company{
+    name : String,
     id : Number,
     airplanes : Array<Airplane>,
-    route : Array<Route>
+    routes : Array<Route>
 }
