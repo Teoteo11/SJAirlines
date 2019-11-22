@@ -10,21 +10,21 @@ router.use(bodyParser.urlencoded({extended: true}));
 
 
 
-let exampleJSON = [{"id" : 1, "tickets": [{id_company : 1,id_ticket : 1,id_flight : 1,isChecked : false}]}];
-let exampleJSON3 = [{id_company : 1,id_ticket : 1,id_flight : 1,isChecked : false}] 
+let exampleJSON = [{"id" : 1, "tickets": [{idCompany : 1,idTicket : 1,idFlight : 1,isChecked : false}]}];
+let exampleJSON3 = [{idCompany : 1,idTicket : 1,idFlight : 1,isChecked : false}] 
 
 
-let exampleJSON2 = [{"id": 1, "airplanes": [{"id" : 2, "model" : "dsdssd","num_seats" : 50}]}]
+let exampleJSON2 = [{"id": 1, "airplanes": [{"id" : 2, "model" : "dsdssd","numSeats" : 50}]}]
 
 router.post("/",(req,res)=>{
-    if(Number(req.body.id_company) && Number(req.body.id_flight) && Number(req.body.UserId)){
+    if(Number(req.body.idCompany) && Number(req.body.idFlight) && Number(req.body.UserId)){
         //getAllcompany()
         const company = exampleJSON2.find((company)=>{
-            return company.id === Number(req.body.id_company);
+            return company.id === Number(req.body.idCompany);
         });
         if(company){
             let airplane = company.airplanes.find((airplane)=>{
-                return req.body.id_flight === airplane.id;
+                return req.body.idFlight === airplane.id;
             });
             if(airplane){
                 //getAllUser
@@ -32,12 +32,12 @@ router.post("/",(req,res)=>{
                     return user.id === req.body.UserId;
                 });
                 if(user){
-                    if(airplane.num_seats !==0){
-                        airplane.num_seats--;
+                    if(airplane.numSeats !==0){
+                        airplane.numSeats--;
                         let ticket:Ticket = {
-                            id_company: Number(req.body.id_company),
-                            id_ticket: 1, //generateId()
-                            id_flight: Number(req.body.id_flight),
+                            idCompany: Number(req.body.idCompany),
+                            idTicket: 1, //generateId()
+                            idFlight: Number(req.body.idFlight),
                             isChecked: false
                         };
                         //addTicketInUser
@@ -79,7 +79,7 @@ router.put("/:id",(req,res)=>{
     });
     if(user){
         let result = user.tickets.find((ticket)=>{
-            if(ticket.id_ticket === Number(req.params.id)){
+            if(ticket.idTicket === Number(req.params.id)){
                 ticket.isChecked = true;
                 return true;
             }
@@ -94,7 +94,7 @@ router.put("/:id",(req,res)=>{
 
 router.delete("/:id",(req,res)=>{
     let result = exampleJSON3.find((ticket)=>{
-        if(ticket.id_ticket === Number(req.params.id)){
+        if(ticket.idTicket === Number(req.params.id)){
             
             return true;
         }
