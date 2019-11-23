@@ -22,7 +22,7 @@ let exampleJSONCompany = [
 ]
 
 
-router.post("/",(req,res)=>{
+router.post("/",(req,res) => {
     //se il req.body.name c'è nel json
     const nameCompany = req.body.name
     const controlCompany = nameCompany.find(exampleJSONCompany);
@@ -42,16 +42,42 @@ router.post("/",(req,res)=>{
     }
 });
 
-router.get("/",(req,res)=>{
+router.get("/",(req,res) => {
     res.status(200).json(exampleJSONCompany);
     if(req.query.name){
-        const company = exampleJSONCompany.find((company)=>{ 
+        const company = exampleJSONCompany.find((company) => { 
             return company.name === String(req.query.name) ; 
         });
         if(company){
             return res.status(200).json(company);
         }
         return res.status(404).json({message: "Company not found"});
+    }
+});
+
+router.put("/:name",(req,res) => {
+    const company = exampleJSONCompany.find((company)=>{
+        return company.name === req.body.name;
+    });
+    if(company){
+        return res.status(404).json({message : "Company already exists"});
+    }else{
+        exampleJSONCompany.push(req.body.name);
+        //comandi di mongo che per usare dovrei usare i suoi metodi ecc..
+    }
+});
+
+router.delete("/:name",(req,res) => {
+    const nameCompany = req.body.name
+    const controlCompany = nameCompany.find(exampleJSONCompany);
+    if(!controlCompany){
+        return res.status(404).json({message : "Company not found"});
+    }
+    else{
+        const index = exampleJSONCompany.indexOf(controlCompany.id, 0);
+        if (index > -1) {
+            exampleJSONCompany.splice(index, 1);
+        }
     }
 });
 
