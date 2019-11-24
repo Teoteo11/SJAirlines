@@ -11,13 +11,15 @@ let exampleJSONCompany = [
         name : "Alitalia",
         id : "6",
         airplanes : [{id : 1,model : "Boeing 566",numSeats : 60}],
-        route : [{id : 10,placeDeparture : "Catania",placeDestination : "Roma"}], 
+        route : [{id : 10,placeDeparture : "Catania",placeDestination : "Roma"}],
+        maxAirplanes : "20",
     },
     {
         name : "EasyJet",
         id : "4",
         airplanes : [{id : 2,model : "Boeing 787",numSeats : 80}],
-        route : [{id : 13,placeDeparture : "Milano",placeDestination : "Amsterdam"}], 
+        route : [{id : 13,placeDeparture : "Milano",placeDestination : "Amsterdam"}],
+        maxAirplanes : "20", 
     }
 ]
 
@@ -26,13 +28,14 @@ router.post("/",(req,res) => {
     //se il req.body.name c'è nel json
     const nameCompany = req.body.name
     const controlCompany = nameCompany.find(exampleJSONCompany);
-    if(String(nameCompany) && Number(req.body.id) && Array(req.body.airplanes) && Array(req.body.route)){
+    if(String(nameCompany) && Number(req.body.id) && Array(req.body.airplanes) && Array(req.body.route) && Number(req.body.maxAirplanes)){
         if(!controlCompany){
             let company:Company = {
                 name: String(req.body.name),
                 id : Number(req.body.id),
                 airplanes : Array(req.body.airplanes),
-                routes : Array(req.body.route)
+                routes : Array(req.body.route),
+                maxAirplanes : Number(req.body.maxAirplanes),
             };
             exampleJSONCompany.push(JSON.parse(JSON.stringify(company)));
         }

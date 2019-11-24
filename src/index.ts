@@ -9,7 +9,7 @@ export interface Ticket {
 export interface Airplane{
     id : Number,
     model : String,
-    numSeats : Number
+    numSeats : Number,
 }
 
 export interface User {
@@ -38,5 +38,6 @@ export interface Company{
     name : String,
     id : Number,
     airplanes : Array<Airplane>,
-    routes : Array<Route>
+    routes : Array<Route>,
+    maxAirplanes : Number
 }
