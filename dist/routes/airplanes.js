@@ -17,6 +17,16 @@ const airplane_1 = require("../model/airplane");
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
+router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //all airplanes of one company
+    try {
+        const allAirplane = yield airplane_1.AirplaneModel.find();
+        return res.status(200).json(allAirplane);
+    }
+    catch (error) {
+        return res.status(404).json({ message: "there's an error" });
+    }
+}));
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const controlModel = airplane_1.AirplaneModel.findOne(req.body.model);
     try {
@@ -34,17 +44,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).json({ message: "Airplane already exists" });
     }
 }));
-router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //all airplanes of one company
-    try {
-        const allAirplane = yield airplane_1.AirplaneModel.find();
-        return res.status(200).json(allAirplane);
-    }
-    catch (error) {
-        return res.status(404).json({ message: "there's an error" });
-    }
-}));
-//router.put("/:model",(req,res) => {});
+// TODO: router.put("/:model",(req,res) => {});
 router.delete("/:model", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const controlModel = airplane_1.AirplaneModel.findOne(req.params.model);
     try {

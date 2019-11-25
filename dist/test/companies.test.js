@@ -14,20 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
-describe("RESOURCE -> companies", () => {
-    it("GET / it should return a single company", () => __awaiter(void 0, void 0, void 0, function* () {
+describe("Resource: companies | File: src/companies.ts", () => {
+    it("Read: GET | should return a single company", () => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield supertest_1.default(app_1.default).get('/companies');
         expect(result.status).toEqual(200);
     }));
-    it("GET / it should return a filtered company", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Read: GET | should return a filtered company", () => __awaiter(void 0, void 0, void 0, function* () {
         const query = "/?name=Alitalia";
         const result = yield supertest_1.default(app_1.default).get('/companies' + query, () => {
             expect(result.body);
         });
     }));
-});
-describe("RESOURCE -> companies", () => {
-    it("POST / should return a json message with a company", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Create: POST | should return a json containing a company", () => __awaiter(void 0, void 0, void 0, function* () {
         const companyName = "Alitalia";
         const body = { "name": companyName.toString() };
         const result = yield supertest_1.default(app_1.default).post('/companies').send(body);
@@ -36,16 +34,3 @@ describe("RESOURCE -> companies", () => {
         // expect(result.body).toHaveProperty("message");
     }));
 });
-// describe('Login', () => {
-//     it('succeeds with correct credentials', async () => {
-//         const response = await GET('/companies')
-//         .expect('Content-Type', '/json/')
-//         .expect(200);
-//          // expect(res.body.user.email).toBe(demoUser.email);
-//        });
-// });
-// describe('Sample Test', () => {
-//     it('should test that true === true', () => {
-//       expect(true).toBe(true);
-//     });
-// });

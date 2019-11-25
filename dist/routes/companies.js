@@ -14,9 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const company_1 = require("../model/company");
-const companies_1 = __importDefault(require("./companies"));
 const router = express_1.default.Router();
-router.use("/", companies_1.default);
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // POST - insert company

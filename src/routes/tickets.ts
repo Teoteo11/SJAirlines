@@ -1,16 +1,34 @@
-import express from "express"
-import bodyParser from "body-parser";
-import {UserModel} from "./../model/user"
-import {TicketModel} from "./../model/ticket"
-import { CompanyModel } from "../model/company";
-import { FlightModel } from "../model/flight";
-import { AirplaneModel } from "../model/airplane";
-
+import express              from "express"
+import bodyParser           from "body-parser";
+import { UserModel }        from "./../model/user"
+import { TicketModel }      from "./../model/ticket"
+import { CompanyModel }     from "../model/company";
+import { FlightModel }      from "../model/flight";
+import { AirplaneModel }    from "../model/airplane";
 
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
+router.get("/:id",async(req,res)=>{
+    try{
+        const ticket = await TicketModel.findById(req.params.id);
+        return res.status(200).json(ticket);
+    }
+    catch(err){
+        return res.status(404).json({message: "Ticket not found"});
+    }
+});
+
+router.get("/",async(req,res)=>{
+    try{
+        const allTickets = await TicketModel.find();
+        return res.status(200).json(allTickets);
+    }
+    catch(err){
+        return res.status(404).json({message: err});
+    }
+});
 
 router.post("/",async(req,res)=>{
     if(req.body.idCompany && req.body.idFlight && req.body.idUser){
@@ -38,27 +56,6 @@ router.post("/",async(req,res)=>{
     }
     return res.status(400).json({message : "Invalid entry"});
 });
-
-router.get("/",async(req,res)=>{
-    try{
-        const allTickets = await TicketModel.find();
-        return res.status(200).json(allTickets);
-    }
-    catch(err){
-        return res.status(404).json({message: err});
-    }
-});
-
-router.get("/:id",async(req,res)=>{
-    try{
-        const ticket = await TicketModel.findById(req.params.id);
-        return res.status(200).json(ticket);
-    }
-    catch(err){
-        return res.status(404).json({message: "Ticket not found"});
-    }
-});
-
 
 router.put("/:id",async(req,res)=>{
     try{

@@ -1,9 +1,8 @@
-import express from "express"
-import bodyParser from "body-parser";
-import { CompanyModel } from "../model/company";
+import express              from "express"
+import bodyParser           from "body-parser";
+import { CompanyModel }     from "../model/company";
 
 const router = express.Router();
-// router.use("/", companies);
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 

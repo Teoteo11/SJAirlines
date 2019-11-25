@@ -21,6 +21,24 @@ const airplane_1 = require("../model/airplane");
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
+router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const ticket = yield ticket_1.TicketModel.findById(req.params.id);
+        return res.status(200).json(ticket);
+    }
+    catch (err) {
+        return res.status(404).json({ message: "Ticket not found" });
+    }
+}));
+router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const allTickets = yield ticket_1.TicketModel.find();
+        return res.status(200).json(allTickets);
+    }
+    catch (err) {
+        return res.status(404).json({ message: err });
+    }
+}));
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.idCompany && req.body.idFlight && req.body.idUser) {
         const user = yield user_1.UserModel.findById(req.body.idUser);
@@ -41,24 +59,6 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(200).json(ticket);
     }
     return res.status(400).json({ message: "Invalid entry" });
-}));
-router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const allTickets = yield ticket_1.TicketModel.find();
-        return res.status(200).json(allTickets);
-    }
-    catch (err) {
-        return res.status(404).json({ message: err });
-    }
-}));
-router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const ticket = yield ticket_1.TicketModel.findById(req.params.id);
-        return res.status(200).json(ticket);
-    }
-    catch (err) {
-        return res.status(404).json({ message: "Ticket not found" });
-    }
 }));
 router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

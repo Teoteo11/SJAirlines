@@ -1,10 +1,21 @@
-import express from "express"
-import bodyParser from "body-parser";
-import { AirplaneModel } from "../model/airplane";
+import express              from "express"
+import bodyParser           from "body-parser";
+import { AirplaneModel }    from "../model/airplane";
 
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
+
+router.get( "/",async(req,res) => {
+    //all airplanes of one company
+    try {
+        const allAirplane = await AirplaneModel.find();
+        return res.status(200).json(allAirplane);
+    } catch (error) {
+        return res.status(404).json({message : "there's an error"});
+        
+    }
+});
 
 router.post("/",async(req,res) => {
     const controlModel = AirplaneModel.findOne(req.body.model);
@@ -23,18 +34,7 @@ router.post("/",async(req,res) => {
     }
 });
 
-router.get( "/",async(req,res) => {
-    //all airplanes of one company
-    try {
-        const allAirplane = await AirplaneModel.find();
-        return res.status(200).json(allAirplane);
-    } catch (error) {
-        return res.status(404).json({message : "there's an error"});
-        
-    }
-});
-
-//router.put("/:model",(req,res) => {});
+// TODO: router.put("/:model",(req,res) => {});
 
 router.delete("/:model",async(req,res) => {
     const controlModel = AirplaneModel.findOne(req.params.model);

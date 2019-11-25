@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const airplanes_1 = __importDefault(require("./routes/airplanes"));
+const users_1 = __importDefault(require("./routes/users"));
+const tickets_1 = __importDefault(require("./routes/tickets"));
 const companies_1 = __importDefault(require("./routes/companies"));
-const port = process.env.PORT || 3000;
+const airplanes_1 = __importDefault(require("./routes/airplanes"));
 const app = express_1.default();
-const router = express_1.default.Router();
+const port = process.env.PORT || 3000;
 const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority";
 app.use(body_parser_1.default.json());
 app.use((req, res, next) => {
@@ -18,10 +19,10 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     next();
 });
-app.use("/airplane", airplanes_1.default);
-app.use("/flight", airplanes_1.default);
-app.use("/company", companies_1.default);
-app.use("/user", airplanes_1.default);
+app.use("/airplanes", airplanes_1.default);
+app.use("/tickets", tickets_1.default);
+app.use("/companies", companies_1.default);
+app.use("/users", users_1.default);
 app.listen(port, () => {
     mongoose_1.default.connect(address, {
         useNewUrlParser: true,
