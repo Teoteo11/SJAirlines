@@ -15,18 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 describe("RESOURCE -> companies", () => {
-    it("GET / it should return a single company?", () => __awaiter(void 0, void 0, void 0, function* () {
-        const result = yield supertest_1.default(app_1.default).get('/companies', () => {
-            expect(result.status).toEqual(200);
-            expect(result.body).toBeInstanceOf(Object);
-        });
+    it("GET / it should return a single company", () => __awaiter(void 0, void 0, void 0, function* () {
+        const result = yield supertest_1.default(app_1.default).get('/companies');
+        expect(result.status).toEqual(200);
     }));
     it("GET / it should return a filtered company", () => __awaiter(void 0, void 0, void 0, function* () {
         const query = "/?name=Alitalia";
         const result = yield supertest_1.default(app_1.default).get('/companies' + query, () => {
-            console.log(app_1.default.get.toString());
             expect(result.body);
         });
+    }));
+});
+describe("RESOURCE -> companies", () => {
+    it("POST / should return a json message with a company", () => __awaiter(void 0, void 0, void 0, function* () {
+        const companyName = "Alitalia";
+        const body = { "name": companyName.toString() };
+        const result = yield supertest_1.default(app_1.default).post('/companies').send(body);
+        console.log(result.body);
+        //expect(result.status).toEqual(200);
+        // expect(result.body).toHaveProperty("message");
     }));
 });
 // describe('Login', () => {

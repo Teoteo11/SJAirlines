@@ -1,6 +1,5 @@
 import express from "express"
 import bodyParser from "body-parser";
-import {Company,Airplane} from "./../index";
 import { AirplaneModel } from "../model/airplane";
 
 const router = express.Router();
