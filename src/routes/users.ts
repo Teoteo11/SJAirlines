@@ -1,106 +1,78 @@
 import express from "express"
 import bodyParser from "body-parser";
 import { User } from "..";
+import { UserModel } from "../model/user";
 
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-let exampleJSONUsers = [
-    {
-        id : 1,
-        username : "PincoPallo",
-        name : "Joe",
-        surname : "Pallino",
-        tickets : [
-            {
-                id_company : 1,
-                id_ticket : 1,
-                id_flight : 1,
-                isChecked : false
-            }
-        ]
-    },
-    {
-        id : 2,
-        username : "CiaoBella",
-        name : "Spaco",
-        surname : "Botiglia",
-        tickets : [
-            {
-                id_company : 1,
-                id_ticket : 2,
-                id_flight : 2,
-                isChecked : false
-            }
-        ]
-    }
-]
-
-router.post("/",(req,res) => {
-    if(req.body.id, req.body.username && req.body.name && req.body.surname && req.body.tickets) {
-        const user = exampleJSONUsers.find((user) => {
-            return user.username === req.body.username;
+router.post("/", async(req,res) => {
+    if(req.body.username && req.body.name && req.body.surname) {
+        let user = new UserModel({
+            username : req.body.username,
+            name : req.body.name,
+            surname : req.body.surname,
+            tickets : [],
         });
-        if(!user) {
-            let user : User = {
-                id : Number(req.body.id),
-                username : req.body.username,
-                name : req.body.name,
-                surname : req.body.surname,
-                tickets : Array(req.body.tickets),
-            };
-            exampleJSONUsers.push(JSON.parse(JSON.stringify(user)));
-            return true;
+        try {
+            await user.save();
+            res.status(201).json(user);
         }
-        return res.status(400).json({message:"User already exists"});
+        catch(err) {
+            res.status(400).json({message : err});
+        }
     }
     return res.status(400).json({message : "Invalid entry"});
 });
 
-router.get( "/",(req,res) => {
-    const user = exampleJSONUsers.find((user) => {
-        return user.name === String(req.query.name);
-    });
-    if(user) {
-
+router.get( "/", async(req,res) => {
+    try {
+        console.log(req.query.username);
+        if(req.query.username) {
+            const user = await UserModel.find({ username: req.query.username });
+            return res.json(user);
+        }
+        const users = await UserModel.find();
+        return res.status(201).json(users);
     }
-    else {
-        res.status(400).json({message : "User not found"});
-    }
-});
-
-router.put("/:username",(req,res) => {
-    const user = exampleJSONUsers.find((user) => {
-        return user.username === req.body.username;
-    });
-    if(user) {
-        return res.status(404).json({message : "User already exists"});
-    }
-    else {
-        let user = {
-            username : req.body.username,
-            name : req.body.name
-        };
-        exampleJSONUsers.push(JSON.parse(JSON.stringify(user)));
-        return true;
+    catch(err){
+        return res.status(400).json({message : "User not found"});
     }
 });
 
-router.delete("/:username",(req,res) => {
-    const user = exampleJSONUsers.find((user) => {
-        return user.username === req.body.username;
-    });
+router.put("/:username", async(req,res) => {
+    const user = await UserModel.find({username : req.params.username});
     if(user) {
-        
+        let json = [];
+        if(req.body.username) {
+            json.push({username: req.body.username});
+        }
+        if(req.body.name) {
+            json.push({name: req.body.name});
+        }
+        if(req.body.surname) {
+            json.push({surname: req.body.surname});
+        }
+
+        try {
+            await UserModel.updateOne(user, {...json});
+            res.status(201).json(user);
+        }
+        catch(err) {
+            res.status(400).json({message : err});
+        }
     }
-    else {
+    return res.status(400).json({message : "Invalid entry"});
+});
+
+router.delete("/:username", async(req,res) => {
+    try {
+        const user = await UserModel.findOneAndRemove({username: req.params.username});
+        return res.status(200).json({message : "User eliminated :", user});
+    } catch (error) {
         return res.status(404).json({message : "User not found"});
     }
 });
-/* C: POST -> accounts/create
-R: GET -> accounts/:username (? filter queries: by name, by surname, ...)
-U: PUT -> accounts/:username
-D: DELETE -> accounts/:username */
 
 export = router;

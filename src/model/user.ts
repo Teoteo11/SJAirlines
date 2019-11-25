@@ -17,7 +17,7 @@ const userSchema = new Schema({
         required: true,
         trim: true
     },
-    ticket: { type: Schema.Types.ObjectId, ref: 'Ticket' },
+    ticket: [{ type: Schema.Types.ObjectId, ref: 'Ticket' }],
 
 });
 
