@@ -7,8 +7,14 @@ const companySchema = new Schema({
         required: true,
         trim: true
     },
-    airplanes: { type: Schema.Types.ObjectId, ref: 'Airplane' },
-    routes: { type: Schema.Types.ObjectId, ref: 'Route' },
+    airplanes: [{type: Schema.Types.ObjectId, ref: 'Airplane' }],
+    routes: [{ type: Schema.Types.ObjectId, ref: 'Route' }],
+    maxAirplanes: {
+        type: Number,
+        required: true,
+        trim: true
+    }
+
 });
 
 

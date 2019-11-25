@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "jest": {
-    "testMatch": ["**/?(*.)+(spec|test).[j]s?(x)"],
+    "testMatch": [
+      "**/?(*.)+(spec|test).[j]s?(x)"
+    ],
     "testEnvironment": "node",
-    "coveragePathIgnorePatterns": ["/node_modules/"]
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "scripts": {
     "start": "node dist/app.js",
