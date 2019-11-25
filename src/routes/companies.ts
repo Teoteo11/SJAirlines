@@ -21,6 +21,12 @@ let exampleJSONCompany = [
     }
 ]
 
+// POST - insert company
+// read all params from req.body
+// check existance of company:
+//  - if already exist, 400
+//  - if not, add the company, 200
+// TODO: set 200 to add company
 
 router.post("/",(req,res) => {
     //se il req.body.name c'è nel json
@@ -35,6 +41,7 @@ router.post("/",(req,res) => {
                 routes : Array(req.body.route)
             };
             exampleJSONCompany.push(JSON.parse(JSON.stringify(company)));
+            // adding
         }
         else{
             return res.status(400).json({message:"Company already exists"});
@@ -42,16 +49,24 @@ router.post("/",(req,res) => {
     }
 });
 
+// GET - find company
+// with query
+// - if filters, get 1 company by name OR no companies if does not exist
+// - if no filters, get all companies
+
 router.get("/",(req,res) => {
-    res.status(200).json(exampleJSONCompany);
+
     if(req.query.name){
         const company = exampleJSONCompany.find((company) => { 
             return company.name === String(req.query.name) ; 
         });
+        
         if(company){
             return res.status(200).json(company);
         }
         return res.status(404).json({message: "Company not found"});
+    } else {
+        return res.status(200).json(exampleJSONCompany);
     }
 });
 
@@ -80,8 +95,5 @@ router.delete("/:name",(req,res) => {
         }
     }
 });
-
-
-
 
 export = router;

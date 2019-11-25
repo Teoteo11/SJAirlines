@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "testMatch": ["**/?(*.)+(spec|test).[j]s?(x)"],
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": ["/node_modules/"]
+  },
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "test": "npm run build; jest"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +23,16 @@
   "devDependencies": {
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.2",
+    "@types/jest": "^24.0.23",
     "@types/node": "^12.12.11",
+    "@types/supertest": "^2.0.8",
+    "babel": "^6.23.0",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-dynamic-import-node": "^2.3.0",
     "body-parser": "^1.19.0",
+    "jest": "^24.9.0",
     "nodemon": "^2.0.0",
+    "supertest": "^4.0.2",
     "ts-node": "^8.5.2",
     "typescript": "^3.7.2"
   }
