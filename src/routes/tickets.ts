@@ -1,113 +1,85 @@
 import express from "express"
 import bodyParser from "body-parser";
-import {Ticket, Company} from "./../index"
-import { RSA_NO_PADDING } from "constants";
+import {UserModel} from "./../model/user"
+import {TicketModel} from "./../model/ticket"
+import { CompanyModel } from "../model/company";
+import { FlightModel } from "../model/flight";
+import { AirplaneModel } from "../model/airplane";
+
 
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-let exampleJSON = [
-    {
-        "id" : 1,
-        "tickets": [{idCompany : 1, idTicket : 1, idFlight : 1, isChecked : false}]
-    }
-];
-let exampleJSON3 = [{idCompany : 1, idTicket : 1, idFlight : 1, isChecked : false}];
 
-let exampleJSON2 = [
-    {
-        "id": 1,
-        "airplanes": [{"id" : 2, "model" : "dsdssd","numSeats" : 50}]
-    }
-];
+router.post("/",async(req,res)=>{
+    if(req.body.idCompany && req.body.idFlight && req.body.idUser){
 
-router.post("/",(req,res) => {
-    if(Number(req.body.idCompany) && Number(req.body.idFlight) && Number(req.body.UserId)) {
-        //getAllcompany()
-        const company = exampleJSON2.find((company) => {
-            return company.id === Number(req.body.idCompany);
-        });
-        if(company) {
-            let airplane = company.airplanes.find((airplane) => {
-                return req.body.idFlight === airplane.id;
-            });
-            if(airplane) {
-                //getAllUser
-                const user = exampleJSON.find((user) => {
-                    return user.id === req.body.UserId;
-                });
-                if(user) {
-                    if(airplane.numSeats !==0) {
-                        airplane.numSeats--;
-                        let ticket:Ticket = {
-                            idCompany: Number(req.body.idCompany),
-                            idTicket: 1, //generateId()
-                            idFlight: Number(req.body.idFlight),
-                            isChecked: false
-                        };
-                        //addTicketInUser
-                        user.tickets.push(JSON.parse(JSON.stringify(ticket)));
-                        return res.status(200).json(ticket);
-                    }
-                    return res.status(400).json({message:"Airplane full"});
-                }
-                return res.status(400).json({message:"User does not exist"});
-            }
-            return res.status(400).json({message:"Airplane does not exist"});
+        const user = await UserModel.findById(req.body.idUser);
+        const company = await CompanyModel.findById(req.body.idCompany);
+        const flight = await FlightModel.findById(req.body.idFlight);
+        const airplane = await AirplaneModel.findOne(Object(flight)["idAirplane"]);
+
+        if(Object(airplane)["numSeats"]===0){
+            return res.status(400).json({message:"Airplane full"});
         }
-        return res.status(400).json({message:"Company does not exist"});
+
+        
+        AirplaneModel.updateOne(airplane,{numSeats : Object(airplane)["numSeats"]--});
+        const ticket = new TicketModel({
+            idCompany: req.body.idCompany,
+            idFlight: req.body.idFlight,
+            isChecked: false
+        });
+    
+        await ticket.save();
+        await UserModel.updateOne(user,{ticket : ticket._id});
+        return res.status(200).json(ticket);
     }
     return res.status(400).json({message : "Invalid entry"});
 });
 
-router.get("/",(req,res) => {
-    //getAllTicket
-    res.status(200).json(exampleJSON);
+router.get("/",async(req,res)=>{
+    try{
+        const allTickets = await TicketModel.find();
+        return res.status(200).json(allTickets);
+    }
+    catch(err){
+        return res.status(404).json({message: err});
+    }
 });
 
-router.get("/:id",(req,res) => {
-    //getAllTicket
-    const ticket = exampleJSON.find((ticket) => { 
-        return ticket.id === Number(req.params.id) ; 
-    });
-    if(ticket) {
+router.get("/:id",async(req,res)=>{
+    try{
+        const ticket = await TicketModel.findById(req.params.id);
         return res.status(200).json(ticket);
     }
-    return res.status(404).json({message: "Ticket not found"});
-});
-
-router.put("/:id",(req,res) => {
-    //getAllUser
-    const user = exampleJSON.find((user) => {
-        return user.id === req.body.UserId;
-    });
-    if(user) {
-        let result = user.tickets.find((ticket) => {
-            if(ticket.idTicket === Number(req.params.id)) {
-                ticket.isChecked = true;
-                return true;
-            }
-            return false; 
-        });
-        if(result) {
-            return res.json(result);
-        }
-        return res.status(404).json({message : "Ticket does not exist"});
+    catch(err){
+        return res.status(404).json({message: "Ticket not found"});
     }
 });
 
-router.delete("/:id",(req,res) => {
-    let result = exampleJSON3.find((ticket) => {
-        if(ticket.idTicket === Number(req.params.id)){
-            return true;
-        }
-        return false; 
-    });
-    if(result) {
-        return res.json(result);
+
+router.put("/:id",async(req,res)=>{
+    try{
+    const ticket = TicketModel.findOneAndUpdate({_id : req.params.id},{isChecked : true});
+    return res.status(200).json(ticket);
     }
-    return res.status(404).json({message : "Ticket not found"});
+    catch(err){
+        return res.status(404).json({message: err});
+    }
+});
+
+router.delete("/:id",async(req,res)=>{
+    try{
+        const ticket = await TicketModel.findOneAndRemove({_id: req.params.id});
+        const user = await TicketModel.findOne({ticket:{_id: req.params.id}});
+        await UserModel.updateOne(user,{ticket : []});
+        return res.status(200).json({message : "Ticket deleted", ticket});
+    }
+    catch(err){
+        return res.status(400).json({message : "Ticket does not exist"});
+    }
 });
 
 export = router;
