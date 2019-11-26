@@ -4,6 +4,7 @@ import bodyParse from "body-parser";
 import company from "./routes/companies"
 import ticket from "./routes/tickets"
 import user from "./routes/users"
+import airplane from "./routes/airplanes"
 
 const app = express();
 app.use(bodyParse.json());
@@ -20,9 +21,10 @@ app.use((req, res, next) => {
     );
     next();
 });
-app.use("/company", company);
-app.use("/user", user);
-app.use("/tickets", ticket)
+app.use("/companies", company);
+app.use("/users", user);
+app.use("/tickets", ticket);
+app.use("/airplanes",airplane)
 
 const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority"
 

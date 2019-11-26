@@ -4,6 +4,7 @@ import {Company,Airplane} from "./../index";
 import { CompanyModel } from "../model/company";
 import airplane from "./airplanes"
 
+
 const router = express.Router();
 router.use("/", airplane);
 router.use(bodyParser.json());

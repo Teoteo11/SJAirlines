@@ -1,7 +1,8 @@
-import express from "express"
+import express, { response } from "express"
 import bodyParser from "body-parser";
 import { User } from "..";
 import { UserModel } from "../model/user";
+import { promisify } from "util";
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -29,8 +30,8 @@ router.post("/", async(req,res) => {
 router.get( "/", async(req,res) => {
     try {
         console.log(req.query.username);
-        if(req.query.username) {
-            const user = await UserModel.find({ username: req.query.username });
+        if(req.query.username || req.query.name || req.query.surname) {
+            const user = await UserModel.find( { $or: [{ username: req.query.username }, { name: req.query.name }, { surname: req.query.surname }]});
             return res.json(user);
         }
         const users = await UserModel.find();
@@ -41,29 +42,25 @@ router.get( "/", async(req,res) => {
     }
 });
 
-router.put("/:username", async(req,res) => {
-    const user = await UserModel.find({username : req.params.username});
-    if(user) {
-        let json = [];
-        if(req.body.username) {
-            json.push({username: req.body.username});
-        }
-        if(req.body.name) {
-            json.push({name: req.body.name});
-        }
-        if(req.body.surname) {
-            json.push({surname: req.body.surname});
-        }
-
-        try {
-            await UserModel.updateOne(user, {...json});
-            res.status(201).json(user);
-        }
-        catch(err) {
-            res.status(400).json({message : err});
-        }
+router.put("/:id", async(req,res) => {
+    if(req.body.name) {
+        UserModel.findOneAndUpdate({ _id: req.params.id}, {name: req.body.name}, (err, doc, user) => {
+            console.log(doc);
+            return res.json(doc);
+        });
     }
-    return res.status(400).json({message : "Invalid entry"});
+    if(req.body.username) {
+        UserModel.findOneAndUpdate({ _id: req.params.id}, {username: req.body.username}, (err, doc, user) => {
+            console.log(doc);
+            return res.json(doc);
+        });
+    }
+    if(req.body.surname) {
+        UserModel.findOneAndUpdate({ _id: req.params.id}, {surname: req.body.surname}, (err, doc, user) => {
+            console.log(doc);
+            return res.json(doc);
+        });
+    }
 });
 
 router.delete("/:username", async(req,res) => {

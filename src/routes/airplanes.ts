@@ -1,7 +1,8 @@
 import express from "express"
 import bodyParser from "body-parser";
-import {Company,Airplane} from "./../index";
 import { AirplaneModel } from "../model/airplane";
+import { CompanyModel } from "../model/company";
+
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -9,6 +10,7 @@ router.use(bodyParser.urlencoded({extended: true}));
 
 router.post("/",async(req,res) => {
     const controlModel = AirplaneModel.findOne(req.body.model);
+        
     try {
         if(!controlModel) {
             let airplane = new AirplaneModel ({
@@ -24,10 +26,11 @@ router.post("/",async(req,res) => {
     }
 });
 
-router.get( "/",async(req,res) => {
+router.get( "/:id/planes",async(req,res) => {
     //all airplanes of one company
     try {
         const allAirplane = await AirplaneModel.find();
+        console.log(allAirplane);
         return res.status(200).json(allAirplane);
     } catch (error) {
         return res.status(404).json({message : "there's an error"});
@@ -35,6 +38,21 @@ router.get( "/",async(req,res) => {
     }
 });
 
+router.get( "/:id/airplane", async(req,res) => {
+    try {
+        console.log(req.params.id);
+        if(req.params.id ) {
+            const index = await CompanyModel.findById(req.params.id,(err,document)=>{return res.json({airplane :Object(document)["airplane"]})});
+            return ;
+            
+        }
+        const users = await CompanyModel.find();
+        return res.status(201).json(users);
+    }
+    catch(err){
+        return res.status(400).json({message : "User not found"});
+    }
+});
 //router.put("/:model",(req,res) => {});
 
 router.delete("/:model",async(req,res) => {
