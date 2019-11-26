@@ -14,5 +14,6 @@ describe("Resource: companies | File: src/companies.ts", () => {
 
         const res = await supertest(app).get('/companies/' + id + '/planes');
         expect(res.status).toEqual(200);
+        // TODO: deep check for plane models or other things
     });
 });
