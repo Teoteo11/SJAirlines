@@ -31,34 +31,38 @@ router.get("/", async(req, res) => {
 });
 
 router.post("/", async(req, res) => {
+
     if(req.body.idCompany && req.body.idFlight && req.body.idUser){
+        try {
+            const user = await UserModel.findById(req.body.idUser);
+            const company = await CompanyModel.findById(req.body.idCompany);
+            const flight = await FlightModel.findById(req.body.idFlight);
+            const airplane = await AirplaneModel.findOne(Object(flight)["idAirplane"]);
 
-        const user = await UserModel.findById(req.body.idUser);
-        const company = await CompanyModel.findById(req.body.idCompany);
-        const flight = await FlightModel.findById(req.body.idFlight);
-        const airplane = await AirplaneModel.findOne(Object(flight)["idAirplane"]);
-
-        if(Object(airplane)["numSeats"] === 0){
-            return res.status(400).json({message:"Airplane full"});
-        }
+            if(Object(airplane)["numSeats"] === 0){
+                return res.status(400).json({message:"Airplane full"});
+            }
+            
+            AirplaneModel.updateOne(airplane,{numSeats : Object(airplane)["numSeats"]--});
+            const ticket = new TicketModel({
+                idCompany: req.body.idCompany,
+                idFlight: req.body.idFlight,
+                isChecked: false
+            });
         
-        AirplaneModel.updateOne(airplane,{numSeats : Object(airplane)["numSeats"]--});
-        const ticket = new TicketModel({
-            idCompany: req.body.idCompany,
-            idFlight: req.body.idFlight,
-            isChecked: false
-        });
-    
-        await ticket.save();
-        await UserModel.updateOne(user,{ticket : ticket._id});
-        return res.status(200).json(ticket);
+            await ticket.save();
+            await UserModel.updateOne(user,{ticket : ticket._id});
+            return res.status(200).json(ticket);
+        } catch (err) {
+            return res.status(400).json({message : "Error"});
+        }
     }
     return res.status(400).json({message : "Invalid entry"});
 });
 
 router.put("/:id", async(req, res) => {
     try{
-        const ticket = TicketModel.findOneAndUpdate({_id : req.params.id},{isChecked : true});
+        const ticket = await TicketModel.findOneAndUpdate({_id : req.params.id},{isChecked : true});
         return res.status(200).json(ticket);
     }
     catch(err){
