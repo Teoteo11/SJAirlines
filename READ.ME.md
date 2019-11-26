@@ -1,5 +1,5 @@
 ﻿# 🌍 SJ-AIRLINES
-Create by @dandelionsam @BazzaStyle @amatoManuel @Gabriele-Zagarella @davide-aita.
+Create by @dandelionsam @BazzaStyle @amatoManuel @Gabriele-Zagarella @davide-aita @Teoteo.
 
 SJAirlines : Your best friend for travel, you will have such an interaction to be able to better organize your travels. It uses DB based on Mongo to store its data; its APIs are based on REST paradigm.
 
