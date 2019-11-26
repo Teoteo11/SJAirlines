@@ -1,31 +1,14 @@
-<<<<<<< HEAD
 import express from "express"
 import bodyParser from "body-parser";
 import { AirplaneModel } from "../model/airplane";
 import { CompanyModel } from "../model/company";
 
-=======
-import express              from "express"
-import bodyParser           from "body-parser";
-import { AirplaneModel }    from "../model/airplane";
->>>>>>> 571938c7e0d9951f3a35a573c4f8f43bcc7ef9fc
 
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-router.get("/:id/planes",async(req,res) => {
-    //all airplanes of one company
-    try {
-        const allAirplane = await AirplaneModel.find();
-        return res.status(200).json(allAirplane);
-    } catch (error) {
-        return res.status(404).json({message : "there's an error"});
-        
-    }
-});
-
-router.post("/:id/plane",async(req,res) => {
+router.post("/",async(req,res) => {
     const controlModel = AirplaneModel.findOne(req.body.model);
         
     try {
@@ -43,7 +26,6 @@ router.post("/:id/plane",async(req,res) => {
     }
 });
 
-<<<<<<< HEAD
 router.get( "/:id/planes",async(req,res) => {
     //all airplanes of one company
     try {
@@ -72,11 +54,8 @@ router.get( "/:id/airplane", async(req,res) => {
     }
 });
 //router.put("/:model",(req,res) => {});
-=======
-// TODO: router.put("/:model",(req,res) => {});
->>>>>>> 571938c7e0d9951f3a35a573c4f8f43bcc7ef9fc
 
-router.delete("/:id/planes/:model",async(req,res) => {
+router.delete("/:model",async(req,res) => {
     const controlModel = AirplaneModel.findOne(req.params.model);
     try {
         if(!controlModel){
