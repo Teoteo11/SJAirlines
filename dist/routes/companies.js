@@ -1,80 +1,78 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const company_1 = require("../model/company");
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
-let exampleJSONCompany = [
-    {
-        name: "Alitalia",
-        id: "6",
-        airplanes: [{ id: 1, model: "Boeing 566", numSeats: 60 }],
-        route: [{ id: 10, placeDeparture: "Catania", placeDestination: "Roma" }],
-    },
-    {
-        name: "EasyJet",
-        id: "4",
-        airplanes: [{ id: 2, model: "Boeing 787", numSeats: 80 }],
-        route: [{ id: 13, placeDeparture: "Milano", placeDestination: "Amsterdam" }],
-    }
-];
-router.post("/", (req, res) => {
-    //se il req.body.name c'è nel json
-    const nameCompany = req.body.name;
-    const controlCompany = nameCompany.find(exampleJSONCompany);
-    if (String(nameCompany) && Number(req.body.id) && Array(req.body.airplanes) && Array(req.body.route)) {
-        if (!controlCompany) {
-            let company = {
-                name: String(req.body.name),
-                id: Number(req.body.id),
-                airplanes: Array(req.body.airplanes),
-                routes: Array(req.body.route)
-            };
-            exampleJSONCompany.push(JSON.parse(JSON.stringify(company)));
+// GET - find company
+// with query
+// - if filters, get 1 company by name OR no companies if does not exist
+// - if no filters, get all companies
+router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (req.query.name) {
+            const companyByName = yield company_1.CompanyModel.findOne({ name: req.query.name });
+            return res.status(200).json(companyByName);
         }
         else {
-            return res.status(400).json({ message: "Company already exists" });
+            const allCompany = yield company_1.CompanyModel.find();
+            return res.status(200).json(allCompany);
         }
     }
-});
-router.get("/", (req, res) => {
-    res.status(200).json(exampleJSONCompany);
-    if (req.query.name) {
-        const company = exampleJSONCompany.find((company) => {
-            return company.name === String(req.query.name);
-        });
-        if (company) {
-            return res.status(200).json(company);
+    catch (err) {
+        return res.status(400).json({ message: "Company not found" });
+    }
+}));
+// POST - insert company
+// read all params from req.body
+// check existance of company:
+//  - if already exist, 400
+//  - if not, add the company, 200
+router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log("POST companies was called");
+    const controlCompany = yield company_1.CompanyModel.findOne({ name: req.body.name });
+    //console.log("\n\n\n\n control company object");
+    //console.log(controlCompany);
+    try {
+        if (!controlCompany) {
+            let company = new company_1.CompanyModel({
+                name: String(req.body.name),
+                airplanes: Array(req.body.airplanes),
+                routes: Array(req.body.route),
+                maxAirplanes: Number(req.body.maxAirplanes),
+            });
+            yield company.save();
+            return res.status(200).json({ message: "Company added" });
         }
+        else {
+            return res.status(200).json({ message: "Company already exists" });
+        }
+    }
+    catch (error) {
+        return res.status(404).json({ message: "qualcosa" });
+    }
+}));
+// TODO: router.put("/:name",async(req,res) => {});
+router.delete("/:name", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const companyByName = yield company_1.CompanyModel.findOneAndRemove({ name: req.params.name });
+        return res.status(200).json({ message: "Company eliminated :", companyByName });
+    }
+    catch (error) {
         return res.status(404).json({ message: "Company not found" });
     }
-});
-router.put("/:name", (req, res) => {
-    const company = exampleJSONCompany.find((company) => {
-        return company.name === req.body.name;
-    });
-    if (company) {
-        return res.status(404).json({ message: "Company already exists" });
-    }
-    else {
-        exampleJSONCompany.push(req.body.name);
-        //comandi di mongo che per usare dovrei usare i suoi metodi ecc..
-    }
-});
-router.delete("/:name", (req, res) => {
-    const nameCompany = req.body.name;
-    const controlCompany = nameCompany.find(exampleJSONCompany);
-    if (!controlCompany) {
-        return res.status(404).json({ message: "Company not found" });
-    }
-    else {
-        const index = exampleJSONCompany.indexOf(controlCompany.id, 0);
-        if (index > -1) {
-            exampleJSONCompany.splice(index, 1);
-        }
-    }
-});
+}));
 module.exports = router;

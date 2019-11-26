@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { Company } from "./../index";
 
 const companySchema = new Schema({
     name: {
@@ -17,6 +16,4 @@ const companySchema = new Schema({
 
 });
 
-
 export const CompanyModel = mongoose.model('Company', companySchema);
-
