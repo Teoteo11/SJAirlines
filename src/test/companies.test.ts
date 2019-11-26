@@ -3,13 +3,14 @@ import app                  from '../app';
 
 describe("Resource: companies | File: src/companies.ts", () => {
 
-    it("Read: GET | should return all companies", async () => {
+    it("Read: GET | should return all companies", async (done) => {
         const result = await supertest(app).get('/companies');
         expect(result.status).toEqual(200);
         expect(result.body);
+        done();
     });
 
-    it("Read: GET | should return a filtered company", async () => {
+    it("Read: GET | should return a filtered company", async (done) => {
         const result = await supertest(app).get('/companies?name=Alitalia');
         expect(result.status).toEqual(200);
         expect(result.body);
@@ -17,6 +18,7 @@ describe("Resource: companies | File: src/companies.ts", () => {
         expect(result.body).toHaveProperty("name");
         expect(result.body).toHaveProperty("airplanes");
         expect(result.body).toHaveProperty("routes");
+        done();
     });
 
     it("Create: POST | inserting existing company, should return a message that company already exist", async() => {
