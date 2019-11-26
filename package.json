@@ -16,7 +16,7 @@
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "build": "tsc -p .",
-    "test": "npm run build; jest"
+    "test": "npm run build; jest --detectOpenHandles; NODE_ENV=test jest --forceExit"
   },
   "keywords": [],
   "author": "",
