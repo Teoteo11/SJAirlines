@@ -8,68 +8,73 @@ const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-router.post("/",async(req,res) => {
-    const controlModel = AirplaneModel.findOne(req.body.model);
-        
-    try {
-        if(!controlModel) {
-            let airplane = new AirplaneModel ({
-                model : String(req.body.model),
-                numSeats : Number(req.body.numSeats),
-            });
-            await airplane.save();
-            //salva l'aereo nella compagnia (scelta da te)
-            return res.status(200).json({message : "Airplane added"});
+//POST
+//add airplane with id airplane like params 
+router.post("/:id/plane",async(req,res) => {
+    if( !Number(req.body.model) && Number(req.body.numSeats) ){
+        try {
+            const company = await  CompanyModel.findById(req.params.id);
+            if(company) {
+                let airplane = new AirplaneModel ({
+                    model : String(req.body.model),
+                    numSeats : Number(req.body.numSeats),
+                });
+                await airplane.save();
+                await CompanyModel.updateOne(company,{$push:{airplanes : airplane._id}});
+                return res.status(200).json({message : "Airplane added"});
+            }
+            return res.status(404).json({message : "Company not found"});
+        } catch (error) {
+            return res.status(400).json({message:error});
         }
-    } catch (error) {
-        return res.status(400).json({message:"Airplane already exists"});
     }
+    return res.status(404).json({message : "Invalid entry"});
 });
 
+
+//GET
+//output -->all airplane of one company (id company )
 router.get( "/:id/planes",async(req,res) => {
     //all airplanes of one company
     try {
-        const allAirplane = await AirplaneModel.find();
-        console.log(allAirplane);
-        return res.status(200).json(allAirplane);
+        const idAirplanes = await CompanyModel.findById(req.params.id).select("airplanes");
+        let airplanes = [];
+        for(let id of Object(idAirplanes)["airplanes"]){
+            airplanes.push(await AirplaneModel.findById(id));
+        }
+        return res.status(200).json(airplanes);
     } catch (error) {
         return res.status(404).json({message : "there's an error"});
         
     }
-});
+}); 
 
-router.get( "/:id/airplane", async(req,res) => {
-    try {
-        console.log(req.params.id);
-        if(req.params.id ) {
-            const index = await CompanyModel.findById(req.params.id,(err,document)=>{return res.json({airplane :Object(document)["airplane"]})});
-            return ;
-            
+//PUT
+//updating of values of specific airplane of  specific company
+router.put("/:id/plane/:idAirplane",async(req,res) => {
+    if(req.body.model && req.params.idAirplane){
+        try{
+            const company = await CompanyModel.findOne({_id :req.params.id, airplanes : req.params.idAirplane});
+            const airplane = await AirplaneModel.findByIdAndUpdate(req.params.idAirplane, {model : req.body.model},{"new": true});
+            return res.json({message : "Airplane edited",airplane});
         }
-        const users = await CompanyModel.find();
-        return res.status(201).json(users);
+        catch(err){
+            return res.status(400).json({message : "Id Airplane is not present"});
+        }
+    }
+    return res.status(400).json({message : "Invalid entry"});
+}); 
+
+//DELETE
+//deleting of airplane of specific company with id
+router.delete("/:id/plane/:idAirplane",async(req,res) => {
+    try{
+        const company = await CompanyModel.findOneAndUpdate({_id : req.params.id , airplanes : req.params.idAirplane},{$pull :{airplanes : req.params.idAirplane}},{"new": true});
+        const airplane = await AirplaneModel.findByIdAndDelete(req.params.idAirplane);
+        return res.status(200).json({message : "Airplane deleted", airplane});
     }
     catch(err){
-        return res.status(400).json({message : "User not found"});
-    }
-});
-//router.put("/:model",(req,res) => {});
-
-router.delete("/:model",async(req,res) => {
-    const controlModel = AirplaneModel.findOne(req.params.model);
-    try {
-        if(!controlModel){
-            return res.status(404).json({message : "Airplane not found"});
-        }
-        else{
-            const airplaneModel = await AirplaneModel.findOneAndRemove({model : req.params.model});
-            const eliminateID = Object(airplaneModel)["_id"];
-            AirplaneModel.remove({_id: eliminateID});
-            return res.status(200).json({message : "Company eliminated :",airplaneModel});
-        }
-        
-    } catch (error) {
-        return res.status(400).json({message : "There's an error"})
+        return res.status(400).json({message : "Id Airplane is not present"});
     }
 });
 

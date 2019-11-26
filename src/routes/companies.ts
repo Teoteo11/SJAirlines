@@ -17,7 +17,8 @@ router.get("/", async(req, res) => {
     try {
         if(req.query.name){
             const companyByName = await CompanyModel.findOne({name : req.query.name});
-            return res.status(200).json(companyByName);
+        
+            return companyByName ? res.status(200).json(companyByName) : res.status(404).json({message: "Company not found"});
         }
         else{
             const allCompany = await CompanyModel.find();
@@ -38,7 +39,7 @@ router.post("/", async(req, res) => {
     // console.log("POST companies was called");
 
     const controlCompany = await CompanyModel.findOne({name : req.body.name});
-
+    
     //console.log("\n\n\n\n control company object");
     //console.log(controlCompany);
 
@@ -53,19 +54,27 @@ router.post("/", async(req, res) => {
             await company.save();
             return res.status(200).json({message : "Company added"});
         } else {
-            return res.status(200).json({message:"Company already exists"});
+            return res.status(400).json({message:"Company already exists"});
         }
     } catch (error) {
-        return res.status(404).json({message: "qualcosa"});
+        return res.status(404).json({message: error});
        }
 });
 
-// TODO: router.put("/:name",async(req,res) => {});
+//PUT
+//updating of values 
+router.put("/:name", async(req,res) => {
+    const user = await CompanyModel.findOneAndUpdate({name: req.params.name},{name : req.body.name},{"new":true});
+    return user ? res.json(user) : res.status(404).json({message : "Company not found"});
+    
+});
 
+//DELETE
+//deleting of company by name
 router.delete("/:name",async(req,res) => {
     try {
         const companyByName = await CompanyModel.findOneAndRemove({name : req.params.name});
-        return res.status(200).json({message : "Company eliminated :",companyByName});
+        return companyByName ? res.status(200).json({message : "Company eliminated :",companyByName}) : res.status(404).json({message : "Company not found"});
     } catch (error) {
         return res.status(404).json({message : "Company not found"})
     }
