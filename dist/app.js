@@ -28,6 +28,7 @@ app.listen(port, () => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
+        console.log(mongoose_1.default.connection);
         console.log("Connected successfully!");
     }).catch(error => {
         console.log("Error connection!");

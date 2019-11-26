@@ -20,7 +20,7 @@ router.get("/:id",async(req,res)=>{
     }
 });
 
-router.get("/",async(req,res)=>{
+router.get("/", async(req, res) => {
     try{
         const allTickets = await TicketModel.find();
         return res.status(200).json(allTickets);
@@ -30,7 +30,7 @@ router.get("/",async(req,res)=>{
     }
 });
 
-router.post("/",async(req,res)=>{
+router.post("/", async(req, res) => {
     if(req.body.idCompany && req.body.idFlight && req.body.idUser){
 
         const user = await UserModel.findById(req.body.idUser);
@@ -38,10 +38,9 @@ router.post("/",async(req,res)=>{
         const flight = await FlightModel.findById(req.body.idFlight);
         const airplane = await AirplaneModel.findOne(Object(flight)["idAirplane"]);
 
-        if(Object(airplane)["numSeats"]===0){
+        if(Object(airplane)["numSeats"] === 0){
             return res.status(400).json({message:"Airplane full"});
         }
-
         
         AirplaneModel.updateOne(airplane,{numSeats : Object(airplane)["numSeats"]--});
         const ticket = new TicketModel({
@@ -57,17 +56,17 @@ router.post("/",async(req,res)=>{
     return res.status(400).json({message : "Invalid entry"});
 });
 
-router.put("/:id",async(req,res)=>{
+router.put("/:id", async(req, res) => {
     try{
-    const ticket = TicketModel.findOneAndUpdate({_id : req.params.id},{isChecked : true});
-    return res.status(200).json(ticket);
+        const ticket = TicketModel.findOneAndUpdate({_id : req.params.id},{isChecked : true});
+        return res.status(200).json(ticket);
     }
     catch(err){
         return res.status(404).json({message: err});
     }
 });
 
-router.delete("/:id",async(req,res)=>{
+router.delete("/:id", async(req, res) => {
     try{
         const ticket = await TicketModel.findOneAndRemove({_id: req.params.id});
         const user = await TicketModel.findOne({ticket:{_id: req.params.id}});

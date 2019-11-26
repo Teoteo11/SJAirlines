@@ -5,7 +5,7 @@ import bodyParse    from "body-parser";
 import users        from "./routes/users";
 import tickets      from "./routes/tickets";
 import companies    from './routes/companies';
-import airplanes    from "./routes/airplanes";
+// import airplanes    from "./routes/airplanes";
 
 const app           = express();
 const port          = process.env.PORT || 3000;
@@ -20,7 +20,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use ("/airplanes",   airplanes);
+// ** We're not using route /airplane from app root, because our clustering 
+// app.use ("/airplanes",   airplanes);
 app.use ("/tickets",     tickets);
 app.use ("/companies",   companies);
 app.use ("/users",       users);
@@ -30,6 +31,7 @@ app.listen(port, () => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
+        // console.log(mongoose.connection);
         console.log("Connected successfully!");
     }).catch(error => {
         console.log("Error connection!");

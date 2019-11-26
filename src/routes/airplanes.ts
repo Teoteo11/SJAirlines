@@ -6,7 +6,7 @@ const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-router.get( "/",async(req,res) => {
+router.get("/:id/planes",async(req,res) => {
     //all airplanes of one company
     try {
         const allAirplane = await AirplaneModel.find();
@@ -17,7 +17,7 @@ router.get( "/",async(req,res) => {
     }
 });
 
-router.post("/",async(req,res) => {
+router.post("/:id/plane",async(req,res) => {
     const controlModel = AirplaneModel.findOne(req.body.model);
     try {
         if(!controlModel) {
@@ -36,7 +36,7 @@ router.post("/",async(req,res) => {
 
 // TODO: router.put("/:model",(req,res) => {});
 
-router.delete("/:model",async(req,res) => {
+router.delete("/:id/planes/:model",async(req,res) => {
     const controlModel = AirplaneModel.findOne(req.params.model);
     try {
         if(!controlModel){

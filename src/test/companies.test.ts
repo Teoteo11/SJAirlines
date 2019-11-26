@@ -16,14 +16,13 @@ describe("Resource: companies | File: src/companies.ts", () => {
 
     });
 
-    it("Create: POST | should return a json containing a company", async() => {
+    it("Create: POST | inserting existing company, should return a message that company already exist", async() => {
         const companyName = "Alitalia";
-        const body = {"name": companyName.toString()};
+        // const body = {"name": companyName.toString()};
+        const result = await supertest(app).post('/companies')
+        .send({"name": companyName});
 
-        const result = await supertest(app).post('/companies').send(body);
-        console.log(result.body);
-        //expect(result.status).toEqual(200);
-        // expect(result.body).toHaveProperty("message");
+        expect(result.status).toEqual(200);
+        expect(result.body).toHaveProperty("message");
     });
-    
 });
