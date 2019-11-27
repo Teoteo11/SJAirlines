@@ -6,7 +6,7 @@ describe("Resource: companies | File: src/companies.ts", () => {
     it("Read: GET | should return all companies", async () => {
         const result = await supertest(app).get('/companies');
         expect(result.status).toEqual(200);
-        expect(result.body);
+        // expect(result.body);
     });
 
     it("Read: GET | should return a filtered company", async () => {
@@ -39,14 +39,23 @@ describe("Resource: companies | File: src/companies.ts", () => {
         expect(res.body).toHaveProperty("message");
     });
 
-    it("Delete: DELETE | deleting all companies", async() => {
+    it("Delete: DELETE | deleting one company by name | CORRECT ID", async() => {
 
-        const res = await supertest(app).delete('/companies');
-        const count = res.body.count;
+        const id = "5ddd7c13faf1748b9715ecda";
+        const res = await supertest(app).delete(`/companies/:${id}`);
 
         expect(res.status).toEqual(200);
         expect(res.body).toHaveProperty("message");
-        expect(res.body).toHaveProperty("count");
-        expect(count).toBeGreaterThanOrEqual(0);
     });
+
+    it("Delete: DELETE | deleting one company by name | INCORRECT ID", async() => {
+
+        const id = "pippo-pertica-e-palla";
+        const res = await supertest(app).delete(`/companies/:${id}`);
+
+        expect(res.status).toEqual(400);
+        expect(res.body).toHaveProperty("message");
+    });
+
+    
 });
