@@ -24,7 +24,8 @@
   "dependencies": {
     "@types/mongoose": "^5.5.32",
     "express": "^4.17.1",
-    "mongoose": "^5.7.12"
+    "mongoose": "^5.7.12",
+    "uuidv1": "^1.6.14"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.1",

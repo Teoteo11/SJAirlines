@@ -21,15 +21,25 @@ const airplane_1 = require("../model/airplane");
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
+router.get("/flight", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.json(yield flight_1.FlightModel.find());
+}));
+//GET
+//Output of filtered tickets
 router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const ticket = yield ticket_1.TicketModel.findById(req.params.id);
+        if (!ticket) {
+            return res.status(404).json({ message: "Ticket not found" });
+        }
         return res.status(200).json(ticket);
     }
     catch (err) {
-        return res.status(404).json({ message: "Ticket not found" });
+        return res.status(404).json({ message: err });
     }
 }));
+//GET
+//Output of all tickets
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const allTickets = yield ticket_1.TicketModel.find();
@@ -39,45 +49,71 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(404).json({ message: err });
     }
 }));
+//POST
+//
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //control of entered parameters in the body
     if (req.body.idCompany && req.body.idFlight && req.body.idUser) {
-        const user = yield user_1.UserModel.findById(req.body.idUser);
-        const company = yield company_1.CompanyModel.findById(req.body.idCompany);
-        const flight = yield flight_1.FlightModel.findById(req.body.idFlight);
-        const airplane = yield airplane_1.AirplaneModel.findOne(Object(flight)["idAirplane"]);
-        if (Object(airplane)["numSeats"] === 0) {
-            return res.status(400).json({ message: "Airplane full" });
+        try {
+            const user = yield user_1.UserModel.findById(req.body.idUser);
+            if (!user) {
+                return res.status(400).json({ message: "User not exists" });
+            }
+            const company = yield company_1.CompanyModel.findById(req.body.idCompany);
+            if (!company) {
+                return res.status(400).json({ message: "Company not exists" });
+            }
+            const idAirplane = yield flight_1.FlightModel.findById(req.body.idFlight).select("idAirplane");
+            if (!idAirplane) {
+                return res.status(400).json({ message: "Flight not exists" });
+            }
+            const numSeats = yield airplane_1.AirplaneModel.findById(idAirplane).select("numSeats");
+            //console.log("Airplane : ",airplane);
+            let number = Number(numSeats);
+            console.log("NUMERO AEREI", numSeats);
+            if (number === 0) {
+                return res.status(400).json({ message: "Airplane full" });
+            }
+            const d = airplane_1.AirplaneModel.findByIdAndUpdate(idAirplane, { numSeats: number-- }, (err, raw) => {
+                console.log(raw);
+            });
+            const ticket = new ticket_1.TicketModel({
+                idCompany: req.body.idCompany,
+                idFlight: req.body.idFlight,
+                isChecked: false
+            });
+            yield ticket.save();
+            yield user_1.UserModel.updateOne(user, { $push: { ticket: ticket._id } });
+            return res.status(200).json(ticket);
         }
-        airplane_1.AirplaneModel.updateOne(airplane, { numSeats: Object(airplane)["numSeats"]-- });
-        const ticket = new ticket_1.TicketModel({
-            idCompany: req.body.idCompany,
-            idFlight: req.body.idFlight,
-            isChecked: false
-        });
-        yield ticket.save();
-        yield user_1.UserModel.updateOne(user, { ticket: ticket._id });
-        return res.status(200).json(ticket);
+        catch (err) {
+            return res.status(400).json({ message: "Error" });
+        }
     }
     return res.status(400).json({ message: "Invalid entry" });
 }));
+//PUT
+//updating of values of ticket
 router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ticket = ticket_1.TicketModel.findOneAndUpdate({ _id: req.params.id }, { isChecked: true });
+        const ticket = yield ticket_1.TicketModel.findOneAndUpdate({ _id: req.params.id }, { isChecked: true });
         return res.status(200).json(ticket);
     }
     catch (err) {
         return res.status(404).json({ message: err });
     }
 }));
+//DELETE
+//deleting of ticket by id
 router.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ticket = yield ticket_1.TicketModel.findOneAndRemove({ _id: req.params.id });
-        const user = yield ticket_1.TicketModel.findOne({ ticket: { _id: req.params.id } });
-        yield user_1.UserModel.updateOne(user, { ticket: [] });
+        const user = yield ticket_1.TicketModel.findOne({ ticket: req.params.id });
+        const ticket = yield ticket_1.TicketModel.findByIdAndDelete(req.params.id);
+        yield user_1.UserModel.updateOne(user, { $pull: { ticket: req.body.id } });
         return res.status(200).json({ message: "Ticket deleted", ticket });
     }
     catch (err) {
-        return res.status(400).json({ message: "Ticket does not exist" });
+        return res.status(400).json({ message: "Id ticket is not present" });
     }
 }));
 module.exports = router;

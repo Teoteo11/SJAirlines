@@ -13,8 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const airplanes_1 = __importDefault(require("./airplanes"));
 const company_1 = require("../model/company");
 const router = express_1.default.Router();
+router.use('/', airplanes_1.default);
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // GET - find company
@@ -25,7 +27,7 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.query.name) {
             const companyByName = yield company_1.CompanyModel.findOne({ name: req.query.name });
-            return res.status(200).json(companyByName);
+            return companyByName ? res.status(200).json(companyByName) : res.status(404).json({ message: "Company not found" });
         }
         else {
             const allCompany = yield company_1.CompanyModel.find();
@@ -33,7 +35,7 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
-        return res.status(400).json({ message: "Company not found" });
+        return res.status(404).json({ message: "Company not found" });
     }
 }));
 // POST - insert company
@@ -58,18 +60,25 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(200).json({ message: "Company added" });
         }
         else {
-            return res.status(200).json({ message: "Company already exists" });
+            return res.status(400).json({ message: "Company already exists" });
         }
     }
     catch (error) {
-        return res.status(404).json({ message: "qualcosa" });
+        return res.status(404).json({ message: error });
     }
 }));
-// TODO: router.put("/:name",async(req,res) => {});
+//PUT
+//updating of values 
+router.put("/:name", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield company_1.CompanyModel.findOneAndUpdate({ name: req.params.name }, { name: req.body.name }, { "new": true });
+    return user ? res.json(user) : res.status(404).json({ message: "Company not found" });
+}));
+//DELETE
+//deleting of company by name
 router.delete("/:name", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companyByName = yield company_1.CompanyModel.findOneAndRemove({ name: req.params.name });
-        return res.status(200).json({ message: "Company eliminated :", companyByName });
+        return companyByName ? res.status(200).json({ message: "Company eliminated :", companyByName }) : res.status(404).json({ message: "Company not found" });
     }
     catch (error) {
         return res.status(404).json({ message: "Company not found" });

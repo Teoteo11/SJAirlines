@@ -2,6 +2,7 @@ import express              from "express"
 import bodyParser           from "body-parser";
 import airplanes            from "./airplanes";
 import { CompanyModel }     from "../model/company";
+import { Company }          from "../index"
 
 
 const router = express.Router();
@@ -15,19 +16,27 @@ router.use(bodyParser.urlencoded({extended: true}));
 // - if no filters, get all companies
 router.get("/", async(req, res) => {
     try {
-        if(req.query.name){
-            const companyByName = await CompanyModel.findOne({name : req.query.name});
-        
-            return companyByName ? res.status(200).json(companyByName) : res.status(404).json({message: "Company not found"});
-        }
-        else{
-            const allCompany = await CompanyModel.find();
-            return res.status(200).json(allCompany);
-        }
+        const allCompany =  await CompanyModel.find();
+        const companies = allCompany.map((company: any) => {
+            return {
+                name: company.name,
+                _id: company._id
+            }
+        })
+        return res.status(200).json(companies);
     } catch (err) {
         return res.status(404).json({message : "Company not found"});
     }
- });
+});
+
+router.get("/:name", async(req, res) => {
+    try {
+        const companyByName = await CompanyModel.findOne({name : req.params.name});
+        return companyByName ? res.status(200).json(companyByName) : res.status(404).json({message: "Company not found"});
+    } catch (err) {
+        return res.status(404).json({message : "Company not found"});
+    }
+});
 
 // POST - insert company
 // read all params from req.body

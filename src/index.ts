@@ -1,15 +1,18 @@
 export interface Ticket {
+    _id?: string;
     idCompany: Number,
     idFlight: Number,
     isChecked: Boolean
 }
 
 export interface Airplane {
+    _id?: string;
     model: String,
     numSeats: Number,
 }
 
 export interface User {
+    _id?: string;
     username: String,
     name: String
     surname: String,
@@ -17,6 +20,7 @@ export interface User {
 }
 
 export interface Flight {
+    _id?: string;
     departure: String,
     destination: String,
     duration: Number,
@@ -24,11 +28,13 @@ export interface Flight {
 }
 
 export interface Route {
+    _id?: string;
     placeDeparture: String,
     placeDestination: String
 }
 
 export interface Company {
+    _id?: string;
     name: String,
     airplanes: Array<Airplane>,
     routes: Array<Route>,

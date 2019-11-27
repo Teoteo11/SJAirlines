@@ -1,18 +1,20 @@
 import supertest            from 'supertest';
 import app                  from '../app';
+const uuidv1               =  require('uuidv1');
+import { Company } from '..';
 
 describe("Resource: companies | File: src/companies.ts", () => {
 
     it("Read: GET | should return all companies", async () => {
-        const result = await supertest(app).get('/companies');
-        expect(result.status).toEqual(200);
-        // expect(result.body);
+        const companies = (await supertest(app).get('/companies').expect(200)).body;
+        companies.array.forEach((element: Company) => {
+            expect(element).toHaveProperty("_id");
+            expect(element).toHaveProperty("name");
+        });
     });
 
     it("Read: GET | should return a filtered company", async () => {
-        const result = await supertest(app).get('/companies?name=Alitalia');
-        expect(result.status).toEqual(200);
-        expect(result.body);
+        const result = await supertest(app).get('/companies/Alitalia').expect(200);
         expect(result.body).toHaveProperty("_id");
         expect(result.body).toHaveProperty("name");
         expect(result.body).toHaveProperty("airplanes");
@@ -32,15 +34,14 @@ describe("Resource: companies | File: src/companies.ts", () => {
 
     it("Delete: DELETE | deleting existing company", async() => {
 
-        const name = "Alitalia";
+        const name = uuidv1();
         const res = await supertest(app).delete('/companies/' + `${name}`);
-
         expect(res.status).toEqual(200);
         expect(res.body).toHaveProperty("message");
     });
 
     it("Delete: DELETE | deleting one company by name | CORRECT ID", async() => {
-
+        // creare una nuova compagnia da cancellare
         const id = "5ddd7c13faf1748b9715ecda";
         const res = await supertest(app).delete(`/companies/:${id}`);
 

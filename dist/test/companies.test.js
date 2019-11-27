@@ -15,23 +15,44 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 describe("Resource: companies | File: src/companies.ts", () => {
-    it("Read: GET | should return a single company", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Read: GET | should return all companies", () => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield supertest_1.default(app_1.default).get('/companies');
         expect(result.status).toEqual(200);
+        // expect(result.body);
     }));
     it("Read: GET | should return a filtered company", () => __awaiter(void 0, void 0, void 0, function* () {
-        const query = "/?name=Alitalia";
-        const result = yield supertest_1.default(app_1.default).get('/companies' + query, () => {
-            expect(result.body);
-        });
+        const result = yield supertest_1.default(app_1.default).get('/companies?name=Alitalia');
+        expect(result.status).toEqual(200);
+        expect(result.body);
+        expect(result.body).toHaveProperty("_id");
+        expect(result.body).toHaveProperty("name");
+        expect(result.body).toHaveProperty("airplanes");
+        expect(result.body).toHaveProperty("routes");
     }));
     it("Create: POST | inserting existing company, should return a message that company already exist", () => __awaiter(void 0, void 0, void 0, function* () {
         const companyName = "Alitalia";
-        // const body = {"name": companyName.toString()};
         const result = yield supertest_1.default(app_1.default).post('/companies')
             .send({ "name": companyName });
         expect(result.status).toEqual(200);
         expect(result.body).toHaveProperty("message");
-        // expect(result.body).toHaveProperty("message");
+    }));
+    // TODO: it("Update: PUT | editing existing company,")
+    it("Delete: DELETE | deleting existing company", () => __awaiter(void 0, void 0, void 0, function* () {
+        const name = "Alitalia";
+        const res = yield supertest_1.default(app_1.default).delete('/companies/' + `${name}`);
+        expect(res.status).toEqual(200);
+        expect(res.body).toHaveProperty("message");
+    }));
+    it("Delete: DELETE | deleting one company by name | CORRECT ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        const id = "5ddd7c13faf1748b9715ecda";
+        const res = yield supertest_1.default(app_1.default).delete(`/companies/:${id}`);
+        expect(res.status).toEqual(200);
+        expect(res.body).toHaveProperty("message");
+    }));
+    it("Delete: DELETE | deleting one company by name | INCORRECT ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        const id = "pippo-pertica-e-palla";
+        const res = yield supertest_1.default(app_1.default).delete(`/companies/:${id}`);
+        expect(res.status).toEqual(400);
+        expect(res.body).toHaveProperty("message");
     }));
 });

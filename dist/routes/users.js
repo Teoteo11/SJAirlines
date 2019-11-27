@@ -17,8 +17,16 @@ const user_1 = require("../model/user");
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
+//POST
+//if don't exist    --> added
+//else              --> message
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.body.username && req.body.name && req.body.surname) {
+    //control of params added
+    if (!Number(req.body.username) && !Number(req.body.name) && !Number(req.body.surname)) {
+        const userExist = yield user_1.UserModel.findOne({ username: req.body.username });
+        if (userExist) {
+            return res.status(400).json({ message: "User already exists" });
+        }
         let user = new user_1.UserModel({
             username: req.body.username,
             name: req.body.name,
@@ -35,11 +43,12 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return res.status(400).json({ message: "Invalid entry" });
 }));
+//GET
+//output of all users or output filtered users
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.query.username);
-        if (req.query.username) {
-            const user = yield user_1.UserModel.find({ username: req.query.username });
+        if (req.query.username || req.query.name || req.query.surname) {
+            const user = yield user_1.UserModel.find({ $or: [{ username: req.query.username }, { name: req.query.name }, { surname: req.query.surname }] });
             return res.json(user);
         }
         const users = yield user_1.UserModel.find();
@@ -49,32 +58,35 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).json({ message: "User not found" });
     }
 }));
-router.put("/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_1.UserModel.find({ username: req.params.username });
-    if (user) {
-        let json = [];
-        if (req.body.username) {
-            json.push({ username: req.body.username });
-        }
-        if (req.body.name) {
-            json.push({ name: req.body.name });
-        }
-        if (req.body.surname) {
-            json.push({ surname: req.body.surname });
-        }
-        try {
-            yield user_1.UserModel.updateOne(user, Object.assign({}, json));
-            res.status(201).json(user);
-        }
-        catch (err) {
-            res.status(400).json({ message: err });
-        }
+//PUT
+//updating of values like name,surname or username 
+router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.body.name) {
+        //{"new" : true} --> allows the update of the value 
+        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { name: req.body.name }, { "new": true });
+        return res.json(user);
     }
-    return res.status(400).json({ message: "Invalid entry" });
+    if (req.body.username) {
+        if (yield user_1.UserModel.findOne({ username: req.body.username })) {
+            return res.status(400).json({ message: "This username already exists" });
+        }
+        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { username: req.body.username }, { "new": true });
+        return res.json(user);
+    }
+    if (req.body.surname) {
+        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { surname: req.body.surname }, { "new": true });
+        return res.json(user);
+    }
+    return res.status(400).json({ message: "Please,insert the values" });
 }));
+//DELETE
+//deleting of user by username
 router.delete("/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.UserModel.findOneAndRemove({ username: req.params.username });
+        const user = yield user_1.UserModel.findOneAndDelete({ username: req.params.username });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
         return res.status(200).json({ message: "User eliminated :", user });
     }
     catch (error) {
