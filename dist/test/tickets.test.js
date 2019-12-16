@@ -34,5 +34,6 @@ describe("Resource: tickets | File: src/tickets.ts", () => {
         expect(ticket.isChecked).toBeInstanceOf(Boolean);
     }));
     // it("Create: POST | should create a ticket", async() => {
+    // TODO MANCA CREAZIONE TICKET
     // });
 });

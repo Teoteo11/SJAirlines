@@ -25,14 +25,23 @@ router.use(body_parser_1.default.urlencoded({ extended: true }));
 // - if no filters, get all companies
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (req.query.name) {
-            const companyByName = yield company_1.CompanyModel.findOne({ name: req.query.name });
-            return companyByName ? res.status(200).json(companyByName) : res.status(404).json({ message: "Company not found" });
-        }
-        else {
-            const allCompany = yield company_1.CompanyModel.find();
-            return res.status(200).json(allCompany);
-        }
+        const allCompany = yield company_1.CompanyModel.find();
+        const companies = allCompany.map((company) => {
+            return {
+                name: company.name,
+                _id: company._id
+            };
+        });
+        return res.status(200).json(companies);
+    }
+    catch (err) {
+        return res.status(404).json({ message: "Company not found" });
+    }
+}));
+router.get("/:name", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const companyByName = yield company_1.CompanyModel.findOne({ name: req.params.name });
+        return companyByName ? res.status(200).json(companyByName) : res.status(404).json({ message: "Company not found" });
     }
     catch (err) {
         return res.status(404).json({ message: "Company not found" });
