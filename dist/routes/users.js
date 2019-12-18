@@ -22,7 +22,9 @@ router.use(body_parser_1.default.urlencoded({ extended: true }));
 //else              --> message
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //control of params added
-    if (!Number(req.body.username) && !Number(req.body.name) && !Number(req.body.surname)) {
+    if (!Number(req.body.username) &&
+        !Number(req.body.name) &&
+        !Number(req.body.surname)) {
         const userExist = yield user_1.UserModel.findOne({ username: req.body.username });
         if (userExist) {
             return res.status(400).json({ message: "User already exists" });
@@ -31,7 +33,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             username: req.body.username,
             name: req.body.name,
             surname: req.body.surname,
-            tickets: [],
+            tickets: []
         });
         try {
             yield user.save();
@@ -48,7 +50,13 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.query.username || req.query.name || req.query.surname) {
-            const user = yield user_1.UserModel.find({ $or: [{ username: req.query.username }, { name: req.query.name }, { surname: req.query.surname }] });
+            const user = yield user_1.UserModel.find({
+                $or: [
+                    { username: req.query.username },
+                    { name: req.query.name },
+                    { surname: req.query.surname }
+                ]
+            });
             return res.json(user);
         }
         const users = yield user_1.UserModel.find();
@@ -58,23 +66,34 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).json({ message: "User not found" });
     }
 }));
+router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (req.params.id) {
+            res.json(yield user_1.UserModel.findById(req.params.id));
+        }
+    }
+    catch (err) {
+        res.status(500).json({ message: err });
+    }
+    return;
+}));
 //PUT
-//updating of values like name,surname or username 
+//updating of values like name,surname or username
 router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.name) {
-        //{"new" : true} --> allows the update of the value 
-        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { name: req.body.name }, { "new": true });
+        //{"new" : true} --> allows the update of the value
+        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { name: req.body.name }, { new: true });
         return res.json(user);
     }
     if (req.body.username) {
         if (yield user_1.UserModel.findOne({ username: req.body.username })) {
             return res.status(400).json({ message: "This username already exists" });
         }
-        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { username: req.body.username }, { "new": true });
+        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { username: req.body.username }, { new: true });
         return res.json(user);
     }
     if (req.body.surname) {
-        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { surname: req.body.surname }, { "new": true });
+        const user = yield user_1.UserModel.findByIdAndUpdate(req.params.id, { surname: req.body.surname }, { new: true });
         return res.json(user);
     }
     return res.status(400).json({ message: "Please,insert the values" });
@@ -83,7 +102,9 @@ router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 //deleting of user by username
 router.delete("/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_1.UserModel.findOneAndDelete({ username: req.params.username });
+        const user = yield user_1.UserModel.findOneAndDelete({
+            username: req.params.username
+        });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

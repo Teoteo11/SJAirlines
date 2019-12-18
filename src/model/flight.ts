@@ -4,14 +4,10 @@ import { Flight } from "./../index";
 
 const flightSchema = new Schema({
     departure: {
-        type: String,
-        required: true,
-        trim: true
+        type: Schema.Types.ObjectId, ref: 'Airport'
     },
     destination: {
-        type: String,
-        required: true,
-        trim: true
+        type: Schema.Types.ObjectId, ref: 'Airport'
     },
     duration: {
         type: Number,
@@ -21,6 +17,10 @@ const flightSchema = new Schema({
     idAirplane: {
         type: Schema.Types.ObjectId, ref: 'Airplane'
     },
+    price : {
+        type: Number,
+        required : true
+    }
 
 });
 

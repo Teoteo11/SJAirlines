@@ -20,22 +20,25 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     next();
 });
-// ** We're not using route /airplane from app root, because our clustering 
+// ** We're not using route /airplane from app root, because our clustering
 // app.use ("/airplanes",   airplanes);
 app.use("/tickets", tickets_1.default);
 app.use("/companies", companies_1.default);
 app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
-mongoose_1.default.connect(address, {
+mongoose_1.default
+    .connect(address, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(() => {
+})
+    .then(() => {
     // console.log(mongoose.connection);
     console.log("Connected successfully!");
-}).catch(error => {
+})
+    .catch((error) => {
     console.log("Error connection!");
 });
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== "test") {
     app.listen(port, () => {
         console.log(`🖥 Server running at port: ${port}`);
     });
