@@ -14,12 +14,12 @@ const companySchema = new mongoose_1.Schema({
         required: true,
         trim: true
     },
-    airplanes: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Airplane' }],
-    routes: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Route' }],
+    airplanes: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Airplane" }],
+    flights: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Flight" }],
     maxAirplanes: {
         type: Number,
         required: true,
         trim: true
     }
 });
-exports.CompanyModel = mongoose_1.default.model('Company', companySchema);
+exports.CompanyModel = mongoose_1.default.model("Company", companySchema);

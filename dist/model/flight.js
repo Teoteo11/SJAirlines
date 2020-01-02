@@ -10,14 +10,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const flightSchema = new mongoose_1.Schema({
     departure: {
-        type: String,
-        required: true,
-        trim: true
+        type: mongoose_1.Schema.Types.ObjectId, ref: 'Airport'
     },
     destination: {
-        type: String,
-        required: true,
-        trim: true
+        type: mongoose_1.Schema.Types.ObjectId, ref: 'Airport'
     },
     duration: {
         type: Number,
@@ -27,5 +23,9 @@ const flightSchema = new mongoose_1.Schema({
     idAirplane: {
         type: mongoose_1.Schema.Types.ObjectId, ref: 'Airplane'
     },
+    price: {
+        type: Number,
+        required: true
+    }
 });
 exports.FlightModel = mongoose_1.default.model('Flight', flightSchema);

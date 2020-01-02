@@ -9,6 +9,7 @@ const users_1 = __importDefault(require("./routes/users"));
 const tickets_1 = __importDefault(require("./routes/tickets"));
 const companies_1 = __importDefault(require("./routes/companies"));
 const flights_1 = __importDefault(require("./routes/flights"));
+const airports_1 = __importDefault(require("./routes/airports"));
 // import airplanes    from "./routes/airplanes";
 const app = express_1.default();
 const port = process.env.PORT || 3002;
@@ -26,6 +27,7 @@ app.use("/tickets", tickets_1.default);
 app.use("/companies", companies_1.default);
 app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
+app.use("/airports", airports_1.default);
 mongoose_1.default
     .connect(address, {
     useNewUrlParser: true,

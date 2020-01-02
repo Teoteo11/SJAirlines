@@ -6,6 +6,7 @@ import users from "./routes/users";
 import tickets from "./routes/tickets";
 import companies from "./routes/companies";
 import flights from "./routes/flights";
+import aiports from "./routes/airports"
 // import airplanes    from "./routes/airplanes";
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/tickets", tickets);
 app.use("/companies", companies);
 app.use("/users", users);
 app.use("/flights", flights);
+app.use("/airports", aiports)
 
 mongoose
   .connect(address, {

@@ -8,8 +8,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    email: {
+const airportSchema = new mongoose_1.Schema({
+    city: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    country: {
         type: String,
         required: true,
         trim: true
@@ -18,17 +23,6 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    surname: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    password: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    ticket: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Ticket' }],
+    }
 });
-exports.UserModel = mongoose_1.default.model('User', userSchema);
+exports.AirportModel = mongoose_1.default.model("Airport", airportSchema);
