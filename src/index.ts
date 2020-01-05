@@ -31,15 +31,22 @@ export interface Flight {
 }
 
 export interface Route {
-	_id?: string;
+	_id?: String;
 	placeDeparture: String;
 	placeDestination: String;
 }
 
 export interface Company {
-	_id?: string;
+	_id?: String;
 	name: String;
 	airplanes: Array<Airplane>;
 	routes: Array<Route>;
 	maxAirplanes: Number;
+}
+
+export interface Airport {
+	id?: String;
+	city: String;
+	country: String;
+	name: String
 }
