@@ -22,4 +22,26 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(500).json({ message: err });
     }
 }));
+router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const airport = new airport_1.AirportModel({
+            city: req.body.city,
+            country: req.body.country,
+            name: req.body.name
+        });
+        yield airport.save();
+        res.status(200).json(airport);
+    }
+    catch (err) {
+        return res.status(500).json({ message: err });
+    }
+}));
+router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return res.status(200).json(yield airport_1.AirportModel.findById(req.params.id));
+    }
+    catch (err) {
+        return res.status(500).json({ message: err });
+    }
+}));
 module.exports = router;

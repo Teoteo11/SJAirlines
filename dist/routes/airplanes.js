@@ -19,7 +19,7 @@ const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 //POST
-//add airplane with id airplane like params 
+//add airplane with id airplane like params
 router.post("/:id/plane", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!Number(req.body.model) && Number(req.body.numSeats)) {
         try {
@@ -27,10 +27,12 @@ router.post("/:id/plane", (req, res) => __awaiter(void 0, void 0, void 0, functi
             if (company) {
                 let airplane = new airplane_1.AirplaneModel({
                     model: String(req.body.model),
-                    numSeats: Number(req.body.numSeats),
+                    numSeats: Number(req.body.numSeats)
                 });
                 yield airplane.save();
-                yield company_1.CompanyModel.updateOne(company, { $push: { airplanes: airplane._id } });
+                yield company_1.CompanyModel.updateOne(company, {
+                    $push: { airplanes: airplane._id }
+                });
                 return res.status(200).json({ message: "Airplane added" });
             }
             return res.status(404).json({ message: "Company not found" });
@@ -62,8 +64,11 @@ router.get("/:id/planes", (req, res) => __awaiter(void 0, void 0, void 0, functi
 router.put("/:id/plane/:idAirplane", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.model && req.params.idAirplane) {
         try {
-            const company = yield company_1.CompanyModel.findOne({ _id: req.params.id, airplanes: req.params.idAirplane });
-            const airplane = yield airplane_1.AirplaneModel.findByIdAndUpdate(req.params.idAirplane, { model: req.body.model }, { "new": true });
+            const company = yield company_1.CompanyModel.findOne({
+                _id: req.params.id,
+                airplanes: req.params.idAirplane
+            });
+            const airplane = yield airplane_1.AirplaneModel.findByIdAndUpdate(req.params.idAirplane, { model: req.body.model }, { new: true });
             return res.json({ message: "Airplane edited", airplane });
         }
         catch (err) {
@@ -76,7 +81,7 @@ router.put("/:id/plane/:idAirplane", (req, res) => __awaiter(void 0, void 0, voi
 //deleting of airplane of specific company with id
 router.delete("/:id/plane/:idAirplane", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const company = yield company_1.CompanyModel.findOneAndUpdate({ _id: req.params.id, airplanes: req.params.idAirplane }, { $pull: { airplanes: req.params.idAirplane } }, { "new": true });
+        const company = yield company_1.CompanyModel.findOneAndUpdate({ _id: req.params.id, airplanes: req.params.idAirplane }, { $pull: { airplanes: req.params.idAirplane } }, { new: true });
         const airplane = yield airplane_1.AirplaneModel.findByIdAndDelete(req.params.idAirplane);
         return res.status(200).json({ message: "Airplane deleted", airplane });
     }
