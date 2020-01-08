@@ -10,6 +10,8 @@ const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
+
+// a che serve?? è un doppione
 router.get("/flight",async(req,res)=>{
     res.json(await FlightModel.find());
 })
@@ -42,11 +44,12 @@ router.get("/", async(req, res) => {
 });
 
 //POST
-//
+// TODO validazione dei dati tramite express validator
 router.post("/", async(req, res) => {
     //control of entered parameters in the body
     if(req.body.idCompany && req.body.idFlight && req.body.idUser){
         try {
+            // TODO da parallelizzare
             const user = await UserModel.findById(req.body.idUser);
 
             if(!user){

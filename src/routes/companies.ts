@@ -43,6 +43,7 @@ router.get("/:name", async(req, res) => {
 // check existance of company:
 //  - if already exist, 400
 //  - if not, add the company, 200
+// TODO validazione dei dati tramite express validator
 router.post("/", async(req, res) => {
 
     // console.log("POST companies was called");

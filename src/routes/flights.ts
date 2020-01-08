@@ -20,7 +20,7 @@ router.get("/:id", async (req, res) => {
   }
   return;
 });
-
+// dargli un senso
 router.get("/:idAirport/:nSeats", async (req, res) => {
   try {
     if (req.params.idAirport && req.params.nSeats) {

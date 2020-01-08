@@ -11,6 +11,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 //POST
 //if don't exist    --> added
 //else              --> message
+// TODO validazione tramite express validator
 router.post("/", async (req, res) => {
   //control of params added
   if (
