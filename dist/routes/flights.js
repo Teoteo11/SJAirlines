@@ -29,6 +29,7 @@ router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return;
 }));
+// dargli un senso
 router.get("/:idAirport/:nSeats", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.params.idAirport && req.params.nSeats) {

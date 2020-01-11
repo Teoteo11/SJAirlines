@@ -7,12 +7,11 @@ import tickets from "./routes/tickets";
 import companies from "./routes/companies";
 import flights from "./routes/flights";
 import aiports from "./routes/airports"
-// import airplanes    from "./routes/airplanes";
+import airplanes from "./routes/airplanes";
 
 const app = express();
 const port = process.env.PORT || 3002;
-const address =
-  "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority";
+const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority";
 
 app.use(bodyParse.json());
 
@@ -29,8 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ** We're not using route /airplane from app root, because our clustering
-// app.use ("/airplanes",   airplanes);
+app.use ("/airplanes", airplanes);
 app.use("/tickets", tickets);
 app.use("/companies", companies);
 app.use("/users", users);
@@ -43,8 +41,7 @@ mongoose
     useUnifiedTopology: true
   })
   .then(() => {
-    // console.log(mongoose.connection);
-    console.log("Connected successfully!");
+    console.log("🗄  Database connected");
   })
   .catch((error: any) => {
     console.log("Error connection!");
@@ -52,7 +49,7 @@ mongoose
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(port, () => {
-    console.log(`🖥 Server running at port: ${port}`);
+    console.log(`🖥  Server running at port ${port}`);
   });
 }
 

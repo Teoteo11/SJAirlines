@@ -20,6 +20,7 @@ router.use(body_parser_1.default.urlencoded({ extended: true }));
 //POST
 //if don't exist    --> added
 //else              --> message
+// TODO validazione tramite express validator
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //control of params added
     if (!Number(req.body.username) &&

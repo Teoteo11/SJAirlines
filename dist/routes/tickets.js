@@ -21,6 +21,7 @@ const airplane_1 = require("../model/airplane");
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
+// a che serve?? è un doppione
 router.get("/flight", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(yield flight_1.FlightModel.find());
 }));
@@ -50,11 +51,12 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 //POST
-//
+// TODO validazione dei dati tramite express validator
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //control of entered parameters in the body
     if (req.body.idCompany && req.body.idFlight && req.body.idUser) {
         try {
+            // TODO da parallelizzare
             const user = yield user_1.UserModel.findById(req.body.idUser);
             if (!user) {
                 return res.status(400).json({ message: "User not exists" });

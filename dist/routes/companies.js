@@ -52,6 +52,7 @@ router.get("/:name", (req, res) => __awaiter(void 0, void 0, void 0, function* (
 // check existance of company:
 //  - if already exist, 400
 //  - if not, add the company, 200
+// TODO validazione dei dati tramite express validator
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log("POST companies was called");
     const controlCompany = yield company_1.CompanyModel.findOne({ name: req.body.name });
