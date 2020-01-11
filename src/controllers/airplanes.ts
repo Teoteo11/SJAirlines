@@ -4,8 +4,7 @@ import chalk from 'chalk';
 
 export const getAllAirplanes = async (req: Request, res: Response) => {
   try {
-    const airplanes = await AirplaneModel.find();
-    return res.status(200).json( {...airplanes} );
+    return res.status(200).json(await AirplaneModel.find({}));
   } 
   catch (error) {
     console.log(chalk.redBright(error));
@@ -16,8 +15,7 @@ export const getAllAirplanes = async (req: Request, res: Response) => {
 
 export const getAirplaneById = async (req: Request, res: Response) => {
   try {
-    const airplane = await AirplaneModel.findById(req.params.id);
-    return res.status(200).json( {airplane} );
+    return res.status(200).json(await AirplaneModel.findById(req.params.id));
   }
   catch (error) { 
     console.log(chalk.redBright(error));
