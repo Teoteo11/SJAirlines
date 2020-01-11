@@ -1,55 +1,84 @@
 import { Request, Response } from "express";
 import { AirplaneModel } from "../model/airplane";
+import chalk from 'chalk';
 
-
-export const getAllPlanes = async (req: Request, res: Response) => {
+export const getAllAirplanes = async (req: Request, res: Response) => {
   try {
-    const planes = await AirplaneModel.find();
-    return res.status(200).json( {...planes} );
+    const airplanes = await AirplaneModel.find();
+    return res.status(200).json( {...airplanes} );
   } 
   catch (error) {
-      return res.status(500).json( {message: "Something gone wrong.", error} );
+    console.log(chalk.redBright(error));
+    return res.status(500).json({ message: error });
   }
 }
 
 
-export const getPlaneById = async (req: Request, res: Response) => {
+export const getAirplaneById = async (req: Request, res: Response) => {
   try {
-    if (req.body._id) {
-      const plane = await AirplaneModel.findById(req.body._id);
-      return res.status(200).json( {...plane} );
-    } else {
-      return res.status(400).json( {message: "Parameter _id missing."} );
+    const airplane = await AirplaneModel.findById(req.params.id);
+    return res.status(200).json( {airplane} );
+  }
+  catch (error) { 
+    console.log(chalk.redBright(error));
+    return res.status(500).json({ message: error });
+  }
+}
+
+
+export const addSingleAirplane = async (req: Request, res: Response) => {
+  try {
+    let newAirplane = new AirplaneModel({
+      model: String(req.body.model),
+      numSeats: Number(req.body.numSeats) });
+      await newAirplane.save();
+      return res.status(200).json({ message: "Airplane added correctly." });
     }
+  catch (error) {
+    console.log(chalk.redBright(error));
+    return res.status(500).json({ message: error });
+  }
+}
+
+
+// TODO: multi add
+// export const addMultiAirplane = async (req: Request, res: Response) => { }
+
+
+export const editSingleAirplane = async (req: Request, res: Response) => {
+  try {
+    await AirplaneModel.findByIdAndUpdate(
+      req.body.id,
+      { model: req.body.model, numSeats: req.body.numSeats },
+      { new: false });
+    return res.status(200).json({ message: "Airplane edited" });
+  } 
+  catch (error) {
+    console.log(chalk.redBright(error));
+    return res.status(400).json({ message: error });
+  }
+}
+
+
+export const deleteSingleAirplane = async (req: Request, res: Response) => {
+  try {
+    await AirplaneModel.findByIdAndDelete(req.params.idAirplane);
+    return res.status(200).json({ message: "Airplane deleted" });
+  } 
+  catch (error) {
+    console.log(chalk.redBright(error));
+    return res.status(500).json({ message: error });
+  }
+}
+
+
+export const deleteAllAirplanes = async (req: Request, res: Response) => {
+  try {
+    await AirplaneModel.deleteMany({});
+    return res.status(200).json({ message: "All airplanes deleted."});
   }
   catch (error) {
-    return res.status(500).json( {message: "", error} );
+    console.log(chalk.redBright(error));
+    return res.status(500).json({ message: error });  
   }
 }
-
-
-// export const addAirplane = async (req:Request, res:Response) => {
-//   if (!Number(req.body.model) && Number(req.body.numSeats)) {
-//     try {
-//       const company = await CompanyModel.findById(req.params.id);
-//       if (company) {
-//         let airplane = new AirplaneModel({
-//           model: String(req.body.model),
-//           numSeats: Number(req.body.numSeats)
-//         });
-//         await airplane.save();
-//         await CompanyModel.updateOne(company, {
-//           $push: { airplanes: airplane._id }
-//         });
-//         return res.status(200).json({ message: "Airplane added" });
-//       }
-//       return res.status(404).json({ message: "Company not found" });
-//     } catch (error) {
-//       return res.status(400).json({ message: error });
-//     }
-//   }
-//   return res.status(404).json({ message: "Invalid entry" });
-// }
-
-
- 

@@ -21,12 +21,13 @@ exports.getAllPlanes = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.getPlaneById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (req.body._id) {
-            const plane = yield airplane_1.AirplaneModel.findById(req.body._id);
+        console.log(req.body.id);
+        if (req.body.id) {
+            const plane = yield airplane_1.AirplaneModel.findById(req.body.id);
             return res.status(200).json(Object.assign({}, plane));
         }
         else {
-            return res.status(400).json({ message: "Parameter _id missing." });
+            return res.status(400).json({ message: "Parameter id missing." });
         }
     }
     catch (error) {

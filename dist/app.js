@@ -27,17 +27,9 @@ app.use("/companies", companies_1.default);
 app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
 app.use("/airports", airports_1.default);
-mongoose_1.default
-    .connect(address, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-    .then(() => {
-    console.log("🗄  Database connected");
-})
-    .catch((error) => {
-    console.log("Error connection!");
-});
+mongoose_1.default.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => { console.log("🗄  Database connected"); })
+    .catch(() => { console.log("❌  Error connection!"); });
 if (process.env.NODE_ENV !== "test") {
     app.listen(port, () => {
         console.log(`🖥  Server running at port ${port}`);

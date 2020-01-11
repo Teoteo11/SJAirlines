@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction} from "express";
 import mongoose from "mongoose";
 import bodyParse from "body-parser";
 
@@ -15,7 +15,7 @@ const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongod
 
 app.use(bodyParse.json());
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -29,22 +29,12 @@ app.use("/users", users);
 app.use("/flights", flights);
 app.use("/airports", aiports)
 
-mongoose
-  .connect(address, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log("🗄  Database connected");
-  })
-  .catch((error: any) => {
-    console.log("Error connection!");
-  });
+mongoose.connect(address, {useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => { console.log("🗄  Database connected") })
+  .catch(() => { console.log("❌  Error connection!") });
 
-if (process.env.NODE_ENV !== "test") {
-  app.listen(port, () => {
-    console.log(`🖥  Server running at port ${port}`);
-  });
+if (process.env.NODE_ENV !== "test") { app.listen(port, () => {
+    console.log(`🖥  Server running at port ${port}`) });
 }
 
 export = app;
