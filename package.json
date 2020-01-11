@@ -13,8 +13,8 @@
     ]
   },
   "scripts": {
-    "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts",
+    "start": "npm run build; node dist/app.js",
+    "dev": "npm run build; nodemon src/app.ts",
     "build": "tsc -p .",
     "test": "npm run build; jest --detectOpenHandles; NODE_ENV=test jest --forceExit"
   },

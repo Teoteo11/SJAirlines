@@ -15,8 +15,8 @@ router.post("/", async (req, res) => {
     const airport = new AirportModel({
       city: req.body.city,
       country: req.body.country,
-      name: req.body.name
-    });
+      name: req.body.name });
+    
     await airport.save();
     res.status(200).json(airport);
   } catch (err) {

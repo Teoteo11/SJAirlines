@@ -10,9 +10,9 @@ const tickets_1 = __importDefault(require("./routes/tickets"));
 const companies_1 = __importDefault(require("./routes/companies"));
 const flights_1 = __importDefault(require("./routes/flights"));
 const airports_1 = __importDefault(require("./routes/airports"));
-// import airplanes    from "./routes/airplanes";
+const airplanes_1 = __importDefault(require("./routes/airplanes"));
 const app = express_1.default();
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3003;
 const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority";
 app.use(body_parser_1.default.json());
 app.use((req, res, next) => {
@@ -21,8 +21,7 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     next();
 });
-// ** We're not using route /airplane from app root, because our clustering
-// app.use ("/airplanes",   airplanes);
+app.use("/airplanes", airplanes_1.default);
 app.use("/tickets", tickets_1.default);
 app.use("/companies", companies_1.default);
 app.use("/users", users_1.default);
@@ -34,15 +33,14 @@ mongoose_1.default
     useUnifiedTopology: true
 })
     .then(() => {
-    // console.log(mongoose.connection);
-    console.log("Connected successfully!");
+    console.log("🗄  Database connected");
 })
     .catch((error) => {
     console.log("Error connection!");
 });
 if (process.env.NODE_ENV !== "test") {
     app.listen(port, () => {
-        console.log(`🖥 Server running at port: ${port}`);
+        console.log(`🖥  Server running at port ${port}`);
     });
 }
 module.exports = app;

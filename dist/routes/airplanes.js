@@ -21,13 +21,13 @@ router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 //POST
 //add airplane with id airplane like params
-router.post("/:id", airplanes_1.addAirplane);
-//GET
-//output -->all airplane of one company (id company )
-router.get("/:id", airplanes_1.getPlaneById);
+// router.post("/:id", addAirplane);
 // GET
 // Description: all planes
 router.get("/", airplanes_1.getAllPlanes);
+//GET
+//output -->all airplane of one company (id company )
+router.get("/:id", airplanes_1.getPlaneById);
 //PUT
 //updating of values of specific airplane of  specific company
 router.put("/:id/plane/:idAirplane", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
