@@ -11,42 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const airplanes_1 = __importDefault(require("./airplanes"));
 const company_1 = require("../model/company");
+const CompanyController = __importStar(require("../controllers/companies"));
 const router = express_1.default.Router();
-router.use('/', airplanes_1.default);
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
-// GET - find company
-// with query
-// - if filters, get 1 company by name OR no companies if does not exist
-// - if no filters, get all companies
-router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const allCompany = yield company_1.CompanyModel.find();
-        const companies = allCompany.map((company) => {
-            return {
-                name: company.name,
-                _id: company._id
-            };
-        });
-        return res.status(200).json(companies);
-    }
-    catch (err) {
-        return res.status(404).json({ message: "Company not found" });
-    }
-}));
-router.get("/:name", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const companyByName = yield company_1.CompanyModel.findOne({ name: req.params.name });
-        return companyByName ? res.status(200).json(companyByName) : res.status(404).json({ message: "Company not found" });
-    }
-    catch (err) {
-        return res.status(404).json({ message: "Company not found" });
-    }
-}));
+router.get("/", CompanyController.getCompanies);
 // POST - insert company
 // read all params from req.body
 // check existance of company:

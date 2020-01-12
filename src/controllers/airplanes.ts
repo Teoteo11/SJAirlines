@@ -2,22 +2,18 @@ import { Request, Response } from "express";
 import { AirplaneModel } from "../model/airplane";
 import chalk from 'chalk';
 
-export const getAllAirplanes = async (req: Request, res: Response) => {
+
+export const getAirplanes = async (req: Request, res: Response) => {
   try {
-    return res.status(200).json(await AirplaneModel.find({}));
+    let airplane: any;
+
+    req.query.id ? 
+    airplane = await AirplaneModel.findById(req.query.id) : 
+    airplane = await AirplaneModel.find();
+
+    return res.status(200).json({ airplane });
   } 
   catch (error) {
-    console.log(chalk.redBright(error));
-    return res.status(500).json({ message: error });
-  }
-}
-
-
-export const getAirplaneById = async (req: Request, res: Response) => {
-  try {
-    return res.status(200).json(await AirplaneModel.findById(req.params.id));
-  }
-  catch (error) { 
     console.log(chalk.redBright(error));
     return res.status(500).json({ message: error });
   }

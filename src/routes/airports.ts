@@ -1,35 +1,22 @@
 import express from "express";
-import { AirportModel } from "../model/airport";
+import bodyParser from "body-parser";
+import * as AirportController from "../controllers/airports";
+
 const router = express.Router();
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
 
-router.get("/", async (req, res) => {
-  try {
-    return res.status(200).json(await AirportModel.find());
-  } catch (err) {
-    return res.status(500).json({ message: err });
-  }
-});
+// Description: return JSON with all airports
+router.get("/", AirportController.getAirports);
 
-router.post("/", async (req, res) => {
-  try {
-    const airport = new AirportModel({
-      city: req.body.city,
-      country: req.body.country,
-      name: req.body.name });
-    
-    await airport.save();
-    res.status(200).json(airport);
-  } catch (err) {
-    return res.status(500).json({ message: err });
-  }
-});
+// Description: return JSON with one airport
+router.get("/:id", AirportController.getAirports);
 
-router.get("/:id", async (req, res) => {
-  try {
-    return res.status(200).json(await AirportModel.findById(req.params.id));
-  } catch (err) {
-    return res.status(500).json({ message: err });
-  }
-});
+// Description:
+// ? Body params:
+router.post("/", AirportController.addSingleAirport);
+
+// router.put()
+// router.delete()
 
 export = router;

@@ -8,51 +8,68 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const airplane_1 = require("../model/airplane");
-exports.getAllPlanes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const chalk_1 = __importDefault(require("chalk"));
+exports.getAirplanes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const planes = yield airplane_1.AirplaneModel.find();
-        return res.status(200).json(Object.assign({}, planes));
+        let airplane;
+        req.query.id ?
+            airplane = yield airplane_1.AirplaneModel.findById(req.query.id) :
+            airplane = yield airplane_1.AirplaneModel.find();
+        return res.status(200).json({ airplane });
     }
     catch (error) {
-        return res.status(500).json({ message: "Something gone wrong.", error });
+        console.log(chalk_1.default.redBright(error));
+        return res.status(500).json({ message: error });
     }
 });
-exports.getPlaneById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.addSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body.id);
-        if (req.body.id) {
-            const plane = yield airplane_1.AirplaneModel.findById(req.body.id);
-            return res.status(200).json(Object.assign({}, plane));
-        }
-        else {
-            return res.status(400).json({ message: "Parameter id missing." });
-        }
+        let newAirplane = new airplane_1.AirplaneModel({
+            model: String(req.body.model),
+            numSeats: Number(req.body.numSeats)
+        });
+        yield newAirplane.save();
+        return res.status(200).json({ message: "Airplane added correctly." });
     }
     catch (error) {
-        return res.status(500).json({ message: "", error });
+        console.log(chalk_1.default.redBright(error));
+        return res.status(500).json({ message: error });
     }
 });
-// export const addAirplane = async (req:Request, res:Response) => {
-//   if (!Number(req.body.model) && Number(req.body.numSeats)) {
-//     try {
-//       const company = await CompanyModel.findById(req.params.id);
-//       if (company) {
-//         let airplane = new AirplaneModel({
-//           model: String(req.body.model),
-//           numSeats: Number(req.body.numSeats)
-//         });
-//         await airplane.save();
-//         await CompanyModel.updateOne(company, {
-//           $push: { airplanes: airplane._id }
-//         });
-//         return res.status(200).json({ message: "Airplane added" });
-//       }
-//       return res.status(404).json({ message: "Company not found" });
-//     } catch (error) {
-//       return res.status(400).json({ message: error });
-//     }
-//   }
-//   return res.status(404).json({ message: "Invalid entry" });
-// }
+// TODO: multi add
+// export const addMultiAirplane = async (req: Request, res: Response) => { }
+exports.editSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield airplane_1.AirplaneModel.findByIdAndUpdate(req.body.id, { model: req.body.model, numSeats: req.body.numSeats }, { new: false });
+        return res.status(200).json({ message: "Airplane edited" });
+    }
+    catch (error) {
+        console.log(chalk_1.default.redBright(error));
+        return res.status(400).json({ message: error });
+    }
+});
+exports.deleteSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield airplane_1.AirplaneModel.findByIdAndDelete(req.params.idAirplane);
+        return res.status(200).json({ message: "Airplane deleted" });
+    }
+    catch (error) {
+        console.log(chalk_1.default.redBright(error));
+        return res.status(500).json({ message: error });
+    }
+});
+exports.deleteAllAirplanes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield airplane_1.AirplaneModel.deleteMany({});
+        return res.status(200).json({ message: "All airplanes deleted." });
+    }
+    catch (error) {
+        console.log(chalk_1.default.redBright(error));
+        return res.status(500).json({ message: error });
+    }
+});

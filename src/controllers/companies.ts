@@ -1,25 +1,20 @@
 import { Request, Response } from "express";
-import { AirportModel } from "../model/airport";
-import chalk from 'chalk';
 import { CompanyModel } from "../model/company";
+import chalk from 'chalk';
 
 
-export const getSingleCompany = async(req: Request, res: Response) => {
+export const getCompanies = async(req: Request, res: Response) => {
   try {
-      return res.status(200).json(await CompanyModel.findById(req.params.id));
-  } catch (error) {
-      return res.status(500).json({message : error});
-  }
-}
+    let company: any;
 
+    req.query.id ?
+    company = await CompanyModel.findById(req.query.id) :
+    company = await CompanyModel.find();
 
-export const getAllCompanies = async (req: Request, res: Response) => {
-  try {
-    return res.status(200).json(await CompanyModel.find({}));
-  }
+    return res.status(200).json({ company });
+  } 
   catch (error) {
-    console.log(chalk.redBright(error));
-    return res.status(500).json({ message: error });
+      return res.status(500).json({message : error});
   }
 }
 
