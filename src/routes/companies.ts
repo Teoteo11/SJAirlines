@@ -14,7 +14,7 @@ router.get("/", CompanyController.getCompanies);
 // check existance of company:
 //  - if already exist, 400
 //  - if not, add the company, 200
-// TODO validazione dei dati tramite express validator
+// TODO: validazione dei dati tramite express validator
 router.post("/", CompanyController.addSingleCompany);
 
 //PUT

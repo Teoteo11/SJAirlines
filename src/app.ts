@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction} from "express";
+import express, { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import bodyParse from "body-parser";
 
@@ -8,6 +8,8 @@ import companies from "./routes/companies";
 import flights from "./routes/flights";
 import aiports from "./routes/airports"
 import airplanes from "./routes/airplanes";
+
+import login from "./routes/login";
 
 const app = express();
 const port = process.env.PORT || 3003;
@@ -27,9 +29,10 @@ app.use("/tickets", tickets);
 app.use("/companies", companies);
 app.use("/users", users);
 app.use("/flights", flights);
-app.use("/airports", aiports)
+app.use("/airports", aiports);
+app.use("/login", login);
 
-mongoose.connect(address, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => { console.log("🗄  Database connected") })
   .catch(() => { console.log("❌  Error connection!") });
 

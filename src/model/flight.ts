@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { Flight } from "./../index";
 
 const flightSchema = new Schema({
 	departure: {

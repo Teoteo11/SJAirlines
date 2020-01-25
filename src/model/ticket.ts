@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { Ticket } from "./../index";
 
 const ticketSchema = new Schema({
     idCompany: {
@@ -12,5 +11,5 @@ const ticketSchema = new Schema({
         type: Boolean,
     }
 });
+ 
 export const TicketModel = mongoose.model('Ticket', ticketSchema);
-

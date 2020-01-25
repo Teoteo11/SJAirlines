@@ -1,5 +1,7 @@
-import { Request, Response } from "express";
-import { AirplaneModel } from "../model/airplane";
+import { Request, Response } from 'express';
+import { AirplaneModel } from '../model/airplane';
+
+import { body, param, validationResult, query } from 'express-validator';
 import chalk from 'chalk';
 
 
@@ -34,8 +36,7 @@ export const addSingleAirplane = async (req: Request, res: Response) => {
   }
 }
 
-
-// TODO: multi add
+// TODO: multi add Airplane
 // export const addMultiAirplane = async (req: Request, res: Response) => { }
 
 
