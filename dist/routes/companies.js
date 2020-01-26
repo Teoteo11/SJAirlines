@@ -31,31 +31,8 @@ router.get("/", CompanyController.getCompanies);
 // check existance of company:
 //  - if already exist, 400
 //  - if not, add the company, 200
-// TODO validazione dei dati tramite express validator
-router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log("POST companies was called");
-    const controlCompany = yield company_1.CompanyModel.findOne({ name: req.body.name });
-    //console.log("\n\n\n\n control company object");
-    //console.log(controlCompany);
-    try {
-        if (!controlCompany) {
-            let company = new company_1.CompanyModel({
-                name: String(req.body.name),
-                airplanes: Array(req.body.airplanes),
-                routes: Array(req.body.route),
-                maxAirplanes: Number(req.body.maxAirplanes),
-            });
-            yield company.save();
-            return res.status(200).json({ message: "Company added" });
-        }
-        else {
-            return res.status(400).json({ message: "Company already exists" });
-        }
-    }
-    catch (error) {
-        return res.status(404).json({ message: error });
-    }
-}));
+// TODO: validazione dei dati tramite express validator
+router.post("/", CompanyController.addSingleCompany);
 //PUT
 //updating of values 
 router.put("/:name", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

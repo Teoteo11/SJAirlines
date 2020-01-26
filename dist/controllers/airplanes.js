@@ -41,7 +41,7 @@ exports.addSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.status(500).json({ message: error });
     }
 });
-// TODO: multi add
+// TODO: multi add Airplane
 // export const addMultiAirplane = async (req: Request, res: Response) => { }
 exports.editSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

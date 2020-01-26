@@ -9,7 +9,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const airplaneSchema = new mongoose_1.Schema({
-    model: { type: String, required: true, trim: true },
-    numSeats: { type: Number, required: true, trim: true }
+    model: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    numSeats: {
+        type: Number,
+        required: true,
+        trim: true
+    }
 });
 exports.AirplaneModel = mongoose_1.default.model('Airplane', airplaneSchema);

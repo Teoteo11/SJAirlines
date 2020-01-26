@@ -14,16 +14,16 @@ let payload = {
   data4: "Data 4",
 };
 
-let i  = 'Mysoft corp';          // Issuer 
-let s  = 'some@user.com';        // Subject 
-let a  = 'http://mysoftcorp.in'; // Audience
+let i = 'Mysoft corp';          // Issuer 
+let s = 'some@user.com';        // Subject 
+let a = 'http://mysoftcorp.in'; // Audience
 
 let signOptions: SignOptions = {
-  issuer:  i,
-  subject:  s,
-  audience:  a,
-  expiresIn:  "12h",
-  algorithm:  "RS256"
+  issuer: i,
+  subject: s,
+  audience: a,
+  expiresIn: "12h",
+  algorithm: "RS256"
 };
 
 export const token = jwt.sign(payload, PRIVATE_KEY, signOptions);

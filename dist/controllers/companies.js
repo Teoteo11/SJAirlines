@@ -16,13 +16,33 @@ exports.getCompanies = (req, res) => __awaiter(void 0, void 0, void 0, function*
         req.query.id ?
             company = yield company_1.CompanyModel.findById(req.query.id) :
             company = yield company_1.CompanyModel.find();
-        return res.status(200).json(company);
+        return res.status(200).json({ company });
     }
     catch (error) {
         return res.status(500).json({ message: error });
     }
 });
-exports.addSingleCompany = 0;
+exports.addSingleCompany = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const controlCompany = yield company_1.CompanyModel.findOne({ id: req.body.id });
+    try {
+        if (!controlCompany) {
+            let company = new company_1.CompanyModel({
+                name: String(req.body.name),
+                airplanes: Array(req.body.airplanes),
+                routes: Array(req.body.route),
+                maxAirplanes: Number(req.body.maxAirplanes),
+            });
+            yield company.save();
+            return res.status(200).json({ message: "Company added" });
+        }
+        else {
+            return res.status(400).json({ message: "Company already exists" });
+        }
+    }
+    catch (error) {
+        return res.status(500).json({ message: error });
+    }
+});
 exports.addMultiCompanies = 0;
 exports.editSingleCompany = 0;
 exports.deleteSingleCompany = 0;

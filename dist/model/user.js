@@ -6,9 +6,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
+const private_key_1 = require("../auth/keys/private-key");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const User = new mongoose_1.Schema({
     email: {
         type: String,
         required: true,
@@ -29,6 +34,14 @@ const userSchema = new mongoose_1.Schema({
         required: true,
         trim: true
     },
-    ticket: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Ticket' }],
+    tickets: [{
+            type: mongoose_1.Schema.Types.ObjectId,
+            required: false,
+            ref: 'Ticket'
+        }]
 });
-exports.UserModel = mongoose_1.default.model('User', userSchema);
+User.methods.generateAuthToken = function () {
+    const token = jsonwebtoken_1.default.sign({ _id: this._id, isAdmin: this.isAdmin }, private_key_1.privateKey);
+    return token;
+};
+exports.UserModel = mongoose_1.default.model('User', User);

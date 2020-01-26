@@ -11,6 +11,7 @@ const companies_1 = __importDefault(require("./routes/companies"));
 const flights_1 = __importDefault(require("./routes/flights"));
 const airports_1 = __importDefault(require("./routes/airports"));
 const airplanes_1 = __importDefault(require("./routes/airplanes"));
+const login_1 = __importDefault(require("./routes/login"));
 const app = express_1.default();
 const port = process.env.PORT || 3003;
 const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority";
@@ -27,6 +28,7 @@ app.use("/companies", companies_1.default);
 app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
 app.use("/airports", airports_1.default);
+app.use("/login", login_1.default);
 mongoose_1.default.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => { console.log("🗄  Database connected"); })
     .catch(() => { console.log("❌  Error connection!"); });

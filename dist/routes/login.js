@@ -11,21 +11,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const UserController = __importStar(require("../controllers/users"));
+const LoginController = __importStar(require("../controllers/login"));
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
-//POST
-//if don't exist    --> added
-//else              --> message
-// Description: return JSON containing all users
-router.get("/", UserController.getUsers);
-// TODO: validazione tramite express validator
-router.post("/", UserController.addUser);
-//PUT
-//updating of values like name,surname or username
-router.put("/", UserController.updateUser);
-//DELETE
-//deleting of user by username
-router.delete("/", UserController.deleteUser);
+// Description: user login with authentication
+// ? Body params: [PAYLOAD]
+router.post("/", LoginController.userLogin);
 module.exports = router;
