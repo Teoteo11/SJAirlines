@@ -14,7 +14,7 @@ export const getCompanies = async(req: Request, res: Response) => {
     return res.status(200).json({ company });
   } 
   catch (error) {
-      return res.status(500).json({message : error});
+      return res.status(500).json({ message: error });
   }
 }
 
@@ -44,7 +44,7 @@ export const addSingleCompany = async(req: Request, res: Response) => {
   }
 }
 
-export const addMultiCompanies = 0;
-export const editSingleCompany = 0;
-export const deleteSingleCompany = 0;
-export const deleteAllCompanies = 0;
+// TODO: export const addMultiCompanies;
+// TODO: export const editSingleCompany;
+// TODO: export const deleteSingleCompany;
+// TODO: export const deleteAllCompanies;
