@@ -11,5 +11,5 @@ const ticketSchema = new Schema({
         type: Boolean,
     }
 });
- 
+
 export const TicketModel = mongoose.model('Ticket', ticketSchema);

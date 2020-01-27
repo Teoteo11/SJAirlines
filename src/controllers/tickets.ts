@@ -9,24 +9,22 @@ import { FlightModel } from "../model/flight";
 
 export const getTickets = async (req: Request, res: Response) => {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ message: "Unprocessable entity" });
-  }
-
-  if (req.query.id || req.query.user) {
-    const ticket = await TicketModel.find({$or: [req.query.id, req.query.user]});
-    if (!ticket) {
-      return res.status(404).json({ message: "Ticket not found." });
-    } else {
+  if (req.query.id || req.query.email) {
+    try {
+      const ticket = await TicketModel.find({$or: [req.query.id, req.query.user]});
+      if(!ticket){
+        return res.status(404).json({ message: "Ticket not found." });
+      }
       return res.status(200).json(ticket);
+    } catch (error) {
+      return res.status(500).json({ message: error });
     }
   } else {
-    const allTickets = await TicketModel.find();
-    if (!allTickets) {
-      return res.status(404).json({ message: "No ticket found." });
-    } else {
+    try {
+      const allTickets = await TicketModel.find();
       return res.status(200).json(allTickets);
+    } catch (error) {
+      return res.status(500).json({ message: error });
     }
   }
 }

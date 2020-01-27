@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { AirplaneModel } from '../model/airplane';
 
-import { body, param, validationResult, query } from 'express-validator';
 import chalk from 'chalk';
 
 

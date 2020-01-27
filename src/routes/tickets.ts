@@ -1,6 +1,6 @@
 import express from "express"
 import bodyParser from "body-parser";
-import { body, param } from "express-validator";
+import { body, query, param } from "express-validator";
 import * as TicketController from "../controllers/tickets";
 
 const router = express.Router();
@@ -10,7 +10,8 @@ router.use(bodyParser.urlencoded({ extended: true }));
 // Description: return JSON containing all tickets
 router.get("/", 
     [ 
-        param("id").isMongoId()
+        query("id").isMongoId(),
+        query("email").isEmail()
     ],
         TicketController.getTickets
     );

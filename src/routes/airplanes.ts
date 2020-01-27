@@ -13,17 +13,18 @@ router.get("/", AirplaneController.getAirplanes);
 router.get("/:id", AirplaneController.getAirplanes);
 
 // Description: add one airplane 
-// ? Body parameters: model, numSeats
+// ? Body parameters: airplane [ model ], airplane max number of seats [ numSeats ]
 router.post("/", AirplaneController.addSingleAirplane);
 
 // Description: update values of a specific airplane
-// ? Body parameters: id, model, numSeats 
+// ? Body parameters: airplane [ id ], airplane [ model ], airplane max number of seats [ numSeats ]
 router.put("/", AirplaneController.editSingleAirplane);
 
 // Description: delete all airplanes
-router.delete("/",)
+router.delete("/");
 
-// Description: delete single airplane
+// Description: delete single airplane by id
+// ? URL parameters: airplane [ id ]
 router.delete("/:id", AirplaneController.deleteSingleAirplane);
 
 export = router;

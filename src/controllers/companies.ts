@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { CompanyModel } from "../model/company";
-import chalk from 'chalk';
 
 
 export const getCompanies = async(req: Request, res: Response) => {

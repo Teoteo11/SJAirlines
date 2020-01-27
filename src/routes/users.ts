@@ -1,27 +1,31 @@
-import express, { Response } from "express";
+import express from "express";
 import bodyParser from "body-parser";
+import { body, param } from "express-validator";
 import * as UserController from "../controllers/users";
 
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-//POST
-//if don't exist    --> added
-//else              --> message
-
 // Description: return JSON containing all users
 router.get("/", UserController.getUsers);
 
 // TODO: validazione tramite express validator
-router.post("/", UserController.addUser);
+// ? Body parameters: username, name, surname 
+router.post("/", 
+  [
+    body("username").isString().notEmpty(),
+    body("name").isString().notEmpty(),
+    body("surname").isString().notEmpty()
+  ],
+    UserController.addUser
+  );
 
-//PUT
-//updating of values like name,surname or username
+// Description: update values of a single user
+// ? Body parameters: 
 router.put("/", UserController.updateUser);
 
-//DELETE
-//deleting of user by username
-router.delete("/", UserController.deleteUser);
+// Description: delete single user by username
+router.delete("/:username", UserController.deleteUser);
 
 export = router;

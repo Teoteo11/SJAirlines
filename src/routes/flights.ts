@@ -4,22 +4,15 @@ import { FlightModel } from "../model/flight";
 import { check, query } from "express-validator";
 import { Flight, Airplane } from "../index";
 import { AirplaneModel } from "../model/airplane";
+import * as FlightsController from "../controllers/flights";
+
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  return res.json(await FlightModel.find());
-});
+// Description: return JSON containing flight/s
+// ? No params: return all flights
+// ? Query flight [id]: return single flight filtered by id
+router.get("/", FlightsController.getFlights);
 
-router.get("/:id", async (req, res) => {
-  try {
-    if (req.params.id) {
-      res.json(await FlightModel.findById(req.params.id));
-    }
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-  return;
-});
 // dargli un senso
 router.get("/:idAirport/:nSeats", async (req, res) => {
   try {
