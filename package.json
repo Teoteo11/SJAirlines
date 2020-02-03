@@ -3,18 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "jest": {
-    "testMatch": [
-      "**/?(*.)+(spec|test).[j]s?(x)"
-    ],
-    "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ]
-  },
   "scripts": {
     "start": "npm run build; node dist/app.js",
     "dev": "npm run build; nodemon src/app.ts",
+    "test": "npm run build; mocha dist/test/*.test.js",
     "build": "tsc -p ."
   },
   "keywords": [],
