@@ -57,7 +57,7 @@ export const editAirplane = async (req: Request, res: Response) => {
     }
   }
   else {
-    return res.status(422).json({ message: "Unprocessable entity" });
+    return res.status(422).json({ message: "Unprocessable entity." });
   }
 }
 
@@ -65,7 +65,7 @@ export const editAirplane = async (req: Request, res: Response) => {
 export const deleteSingleAirplane = async (req: Request, res: Response) => {
   try {
     await AirplaneModel.findByIdAndDelete(req.params.idAirplane);
-    return res.status(200).json({ message: "Airplane deleted" });
+    return res.status(200).json({ message: "Airplane deleted." });
   } 
   catch (error) {
     console.log(chalk.redBright(error));

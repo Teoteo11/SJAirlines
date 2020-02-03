@@ -7,7 +7,12 @@ const router = express.Router();
 // Description: return JSON containing flight/s
 // ? No params: return all flights
 // ? Query flight [id]: return single flight filtered by id
-router.get("/", FlightsController.getFlights);
+router.get("/", 
+  [
+    query('id').isMongoId()
+  ], 
+    FlightsController.getFlights
+  );
 
 // dargli un senso
 router.get(

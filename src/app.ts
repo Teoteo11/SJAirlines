@@ -32,6 +32,9 @@ app.use("/flights", flights);
 app.use("/airports", aiports);
 app.use("/login", login);
 
+import prova from './routes/prova';
+app.use('/prova', prova);
+
 mongoose.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => { console.log("🗄  Database connected") })
   .catch(() => { console.log("❌  Error connection!") });
