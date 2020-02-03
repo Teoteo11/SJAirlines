@@ -29,6 +29,8 @@ app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
 app.use("/airports", airports_1.default);
 app.use("/login", login_1.default);
+const prova_1 = __importDefault(require("./routes/prova"));
+app.use('/prova', prova_1.default);
 mongoose_1.default.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => { console.log("🗄  Database connected"); })
     .catch(() => { console.log("❌  Error connection!"); });

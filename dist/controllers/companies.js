@@ -43,7 +43,7 @@ exports.addSingleCompany = (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.status(500).json({ message: error });
     }
 });
-exports.addMultiCompanies = 0;
-exports.editSingleCompany = 0;
-exports.deleteSingleCompany = 0;
-exports.deleteAllCompanies = 0;
+// TODO: export const addMultiCompanies;
+// TODO: export const editSingleCompany;
+// TODO: export const deleteSingleCompany;
+// TODO: export const deleteAllCompanies;

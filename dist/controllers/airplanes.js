@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const airplane_1 = require("../model/airplane");
+const express_validator_1 = require("express-validator");
 const chalk_1 = __importDefault(require("chalk"));
 exports.getAirplanes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -27,7 +28,7 @@ exports.getAirplanes = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(500).json({ message: error });
     }
 });
-exports.addSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.addAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let newAirplane = new airplane_1.AirplaneModel({
             model: String(req.body.model),
@@ -41,22 +42,28 @@ exports.addSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.status(500).json({ message: error });
     }
 });
-// TODO: multi add Airplane
-// export const addMultiAirplane = async (req: Request, res: Response) => { }
-exports.editSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield airplane_1.AirplaneModel.findByIdAndUpdate(req.body.id, { model: req.body.model, numSeats: req.body.numSeats }, { new: false });
-        return res.status(200).json({ message: "Airplane edited" });
+exports.editAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const errors = express_validator_1.validationResult(req);
+    if (errors.isEmpty()) {
+        try {
+            yield airplane_1.AirplaneModel.findByIdAndUpdate(req.body.id, { model: req.body.model, numSeats: req.body.numSeats }, { new: false, omitUndefined: true });
+            // ** See here https://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate
+            // ** for further information about -omitIUndefined- value.
+            return res.status(200).json({ message: "Airplane edited correctly." });
+        }
+        catch (error) {
+            console.log(chalk_1.default.redBright(error));
+            return res.status(400).json({ message: error });
+        }
     }
-    catch (error) {
-        console.log(chalk_1.default.redBright(error));
-        return res.status(400).json({ message: error });
+    else {
+        return res.status(422).json({ message: "Unprocessable entity." });
     }
 });
 exports.deleteSingleAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield airplane_1.AirplaneModel.findByIdAndDelete(req.params.idAirplane);
-        return res.status(200).json({ message: "Airplane deleted" });
+        return res.status(200).json({ message: "Airplane deleted." });
     }
     catch (error) {
         console.log(chalk_1.default.redBright(error));
