@@ -10,6 +10,8 @@ import aiports from "./routes/airports"
 import airplanes from "./routes/airplanes";
 
 import login from "./routes/login";
+import { resolve } from "dns";
+import { rejects } from "assert";
 
 const app = express();
 const port = process.env.APP_PORT || 3003;
@@ -32,25 +34,12 @@ app.use("/flights", flights);
 app.use("/airports", aiports);
 app.use("/login", login);
 
-// import prova from './routes/prova';
-// app.use('/prova', prova);
+app.listen(port, () => { 
+  console.log(`🖥  Server running at port ${port}`); 
+});
 
-if (process.env.NODE_ENV !== "test") { 
-  app.listen(port, () => { 
-    console.log(`🖥  Server running at port ${port}`);
-    dbConnect(); 
-  });
-}
-  
-async function dbConnect():Promise<any> {
-  return mongoose.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => { console.log("🗄  Database connected") })
-  .catch(() => { console.log("❌  Error connection!") });
-}
-
-// app.listen(port, () => {
-//     console.log(`🖥  Server running at port ${port}`);
-//     app.emit("appStarted");
-// });
+mongoose.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => { console.log("🗄  Database connected"); })
+.catch(() => { console.log("❌  Error connection!"); });
 
 module.exports = app;
