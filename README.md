@@ -1,12 +1,12 @@
 ﻿# 🌍 SJ-AIRLINES
-SJAirlines : Your best friend for travel, you will have such an interaction to be able to better organize your travels. It uses DB based on Mongo to store its data; its APIs are based on REST paradigm.
+SJAirlines : Your best friend for travel, you will have such an interaction to be able to better organize your travels. 
+It uses DB based on Mongo to store its data; its APIs are based on REST paradigm.
 
-# 👨🏻‍💻 COMMANDS
-
-- ▶️ Run `npm start` start node server.
-- 📟 Run `npm run dev` start nodemon server mode dev.
-- 🔨 Run `npm run build` create build project.
-- ⚙️ Run `npm test` test project.
+## 👨🏻‍💻 COMMANDS
+- Run `npm start` to start node server an.
+- Run `npm run dev` start nodemon server mode dev.
+- Run `npm run build` build the project.
+- Run `npm test` or `npm t` to test project.
 
 # 🔧 HOW IS MADE?
 - Organization of components of Mongoose;

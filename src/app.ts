@@ -12,8 +12,8 @@ import airplanes from "./routes/airplanes";
 import login from "./routes/login";
 
 const app = express();
-const port = process.env.PORT || 3003;
-const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority";
+const port = process.env.APP_PORT || 3003;
+export const address:string = 'mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/SJAirlines?retryWrites=true&w=majority';
 
 app.use(bodyParse.json());
 
@@ -32,15 +32,25 @@ app.use("/flights", flights);
 app.use("/airports", aiports);
 app.use("/login", login);
 
-import prova from './routes/prova';
-app.use('/prova', prova);
+// import prova from './routes/prova';
+// app.use('/prova', prova);
 
-mongoose.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
+if (process.env.NODE_ENV !== "test") { 
+  app.listen(port, () => { 
+    console.log(`🖥  Server running at port ${port}`);
+    dbConnect(); 
+  });
+}
+  
+async function dbConnect():Promise<any> {
+  return mongoose.connect(address, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => { console.log("🗄  Database connected") })
   .catch(() => { console.log("❌  Error connection!") });
-
-if (process.env.NODE_ENV !== "test") { app.listen(port, () => {
-    console.log(`🖥  Server running at port ${port}`) });
 }
 
-export = app;
+// app.listen(port, () => {
+//     console.log(`🖥  Server running at port ${port}`);
+//     app.emit("appStarted");
+// });
+
+module.exports = app;

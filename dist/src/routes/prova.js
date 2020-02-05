@@ -11,20 +11,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const app = express_1.default();
-app.use(body_parser_1.default.json());
-const address = "mongodb://Gabriele:helloworld@football-shard-00-00-9yxib.mongodb.net:27017,football-shard-00-01-9yxib.mongodb.net:27017,football-shard-00-02-9yxib.mongodb.net:27017/sj-airlines?ssl=true&replicaSet=football-shard-0&authSource=admin&retryWrites=true&w=majority";
-app.listen(3000, () => __awaiter(void 0, void 0, void 0, function* () {
-    yield mongoose_1.default.connect(address, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }).then(() => {
-        console.log("Connected successfully!");
-    }).catch(error => {
-        console.log("Error connection!");
+const router = express_1.default.Router();
+router.use(body_parser_1.default.json());
+router.use(body_parser_1.default.urlencoded({ extended: true }));
+router.use(logResponseTime);
+function logResponseTime(req, res, next) {
+    const startHrTime = process.hrtime();
+    res.on("finish", () => {
+        const elapsedHrTime = process.hrtime(startHrTime);
+        const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
+        console.log("ℹ️ Path: %s - req elapsed time in ms: %fms", req.path, elapsedTimeInMs);
     });
+    next();
+}
+router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(200).json({ message: "JSON received." });
 }));
+module.exports = router;
