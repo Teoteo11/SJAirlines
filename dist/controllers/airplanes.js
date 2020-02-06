@@ -21,7 +21,7 @@ exports.getAirplanes = (req, res) => __awaiter(void 0, void 0, void 0, function*
         req.query.id ?
             airplane = yield airplane_1.AirplaneModel.findById(req.query.id) :
             airplane = yield airplane_1.AirplaneModel.find();
-        return res.status(200).json({ airplane });
+        return res.status(200).json(airplane);
     }
     catch (error) {
         console.log(chalk_1.default.redBright(error));
@@ -35,7 +35,7 @@ exports.addAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             numSeats: Number(req.body.numSeats)
         });
         yield newAirplane.save();
-        return res.status(200).json({ message: "Airplane added correctly." });
+        return res.status(201).json({ message: "Airplane added correctly." });
     }
     catch (error) {
         console.log(chalk_1.default.redBright(error));

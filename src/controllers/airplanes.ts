@@ -3,6 +3,7 @@ import { AirplaneModel } from '../model/airplane';
 import { validationResult } from 'express-validator';
 
 import chalk from 'chalk';
+import { Airplane } from '..';
 
 
 export const getAirplanes = async (req: Request, res: Response) => {
@@ -13,7 +14,7 @@ export const getAirplanes = async (req: Request, res: Response) => {
     airplane = await AirplaneModel.findById(req.query.id) : 
     airplane = await AirplaneModel.find();
 
-    return res.status(200).json({ airplane });
+    return res.status(200).json(airplane);
   } 
   catch (error) {
     console.log(chalk.redBright(error));
@@ -28,7 +29,7 @@ export const addAirplane = async (req: Request, res: Response) => {
       model: String(req.body.model),
       numSeats: Number(req.body.numSeats) });
       await newAirplane.save();
-      return res.status(200).json({ message: "Airplane added correctly." });
+      return res.status(201).json({ message: "Airplane added correctly." });
     }
   catch (error) {
     console.log(chalk.redBright(error));
