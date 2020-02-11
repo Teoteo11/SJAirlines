@@ -14,8 +14,8 @@ const airports_1 = __importDefault(require("./routes/airports"));
 const airplanes_1 = __importDefault(require("./routes/airplanes"));
 const login_1 = __importDefault(require("./routes/login"));
 const app = express_1.default();
-const port = process.env.APP_PORT || 3003;
-exports.address = 'mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/SJAirlines?retryWrites=true&w=majority';
+const port = process.env.APP_PORT || 3004;
+exports.address = "mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/SJAirlines?retryWrites=true&w=majority";
 app.use(body_parser_1.default.json());
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -33,7 +33,12 @@ app.use("/login", login_1.default);
 app.listen(port, () => {
     console.log(`🖥  Server running at port ${port}`);
 });
-mongoose_1.default.connect(exports.address, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => { console.log("🗄  Database connected"); })
-    .catch(() => { console.log("❌  Error connection!"); });
+mongoose_1.default
+    .connect(exports.address, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+    console.log("🗄  Database connected");
+})
+    .catch(() => {
+    console.log("❌  Error connection!");
+});
 module.exports = app;
