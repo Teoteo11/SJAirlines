@@ -1,8 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import { privateKey } from "../auth/keys/private-key";
-import jwt from 'jsonwebtoken';
+import mongoose, { Schema, Document, Model } from "mongoose";
+import { Ticket } from './ticket';
 
-const User = new Schema({
+const UserSchema: Schema = new Schema({
     email: {
         type: String,
         required: true,
@@ -30,9 +29,12 @@ const User = new Schema({
     }]
 });
 
-User.methods.generateAuthToken = function() { 
-    const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, privateKey); 
-    return token;
+export interface User extends Document {
+	username: String;
+	name: String;
+	surname: String;
+	password: String;
+	tickets: Array<Ticket>;
 }
 
-export const UserModel = mongoose.model('User', User);
+export const UserModel: Model<User> = mongoose.model('User', UserSchema);

@@ -11,7 +11,7 @@ export const getAirports = async (req: Request, res: Response) => {
     airport = await AirportModel.findById(req.params.id) :
     airport = await AirportModel.find();
 
-    return res.status(200).json({ airport });
+    return res.status(200).json(airport);
   } 
   catch (error) {
     console.log(chalk.redBright(error));

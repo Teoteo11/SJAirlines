@@ -32,4 +32,14 @@ const flightSchema = new Schema({
 	}
 });
 
+export interface Flight extends Document {
+	departure: String;
+	destination: String;
+	duration: Number;
+	idAirplane: Number;
+	price: Number;
+	checkIn: Date;
+	checkOut: Date;
+}
+
 export const FlightModel = mongoose.model("Flight", flightSchema);

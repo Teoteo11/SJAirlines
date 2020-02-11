@@ -12,4 +12,10 @@ const ticketSchema = new Schema({
     }
 });
 
+export interface Ticket extends Document {
+	idCompany: Number;
+	idFlight: Number;
+	isChecked: Boolean;
+}
+
 export const TicketModel = mongoose.model('Ticket', ticketSchema);

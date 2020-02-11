@@ -18,4 +18,10 @@ const airportSchema = new Schema({
   }
 });
 
+export interface Airport extends Document{
+	city: String;
+	country: String;
+	name: String
+}
+
 export const AirportModel = mongoose.model("Airport", airportSchema);

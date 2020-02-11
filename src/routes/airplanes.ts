@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { body, param } from 'express-validator';
+import { auth } from '../auth/auth';
 import * as AirplaneController from '../controllers/airplanes';
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post("/",
     body('model').isNumeric().notEmpty(),
     body('numSeats').isNumeric().notEmpty()
   ], 
+  auth,
     AirplaneController.addAirplane
   );
 

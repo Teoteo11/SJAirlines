@@ -1,10 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { AirplaneModel } from '../model/airplane';
 import { validationResult } from 'express-validator';
 
 import chalk from 'chalk';
-import { Airplane } from '..';
-
 
 export const getAirplanes = async (req: Request, res: Response) => {
   try {
@@ -24,6 +22,7 @@ export const getAirplanes = async (req: Request, res: Response) => {
 
 
 export const addAirplane = async (req: Request, res: Response) => {
+
   try {
     let newAirplane = new AirplaneModel({
       model: String(req.body.model),

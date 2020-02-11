@@ -12,6 +12,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const express_validator_1 = require("express-validator");
+const auth_1 = require("../auth/auth");
 const AirplaneController = __importStar(require("../controllers/airplanes"));
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
@@ -27,7 +28,7 @@ router.post("/", [
     express_validator_1.body('id').isMongoId().optional(),
     express_validator_1.body('model').isNumeric().notEmpty(),
     express_validator_1.body('numSeats').isNumeric().notEmpty()
-], AirplaneController.addAirplane);
+], auth_1.auth, AirplaneController.addAirplane);
 // Description: update values of a specific airplane
 // ? Body parameters: airplane [ id ], airplane [ model ], airplane max number of seats [ numSeats ]
 router.put("/", [

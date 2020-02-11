@@ -11,4 +11,9 @@ const airplaneSchema = new Schema({
         trim: true }
 });
 
+export interface Airplane extends Document {
+	model: String;
+	numSeats: Number;
+}
+
 export const AirplaneModel = mongoose.model('Airplane', airplaneSchema);
