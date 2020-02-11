@@ -9,7 +9,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // Description: return JSON containing all planes
-router.get("/", AirplaneController.getAirplanes);
+router.get("/", auth, AirplaneController.getAirplanes);
 
 // Description: add one airplane 
 // ? Body parameters: airplane [ model ], airplane max number of seats [ numSeats ]

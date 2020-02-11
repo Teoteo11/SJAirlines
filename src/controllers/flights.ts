@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-
-import { FlightModel } from "../model/flight";
-import { Flight, Airplane } from "..";
-import { AirplaneModel } from "../model/airplane";
+import { Flight, FlightModel } from "../model/flight";
+import { Airplane, AirplaneModel } from "../model/airplane";
 import { validationResult } from "express-validator";
 
 export const getFlights = async (req: Request, res: Response) => {
