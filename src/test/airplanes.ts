@@ -4,7 +4,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import bodyParser from 'body-parser';
 import { AirplaneModel } from '../model/airplane';
-import { mongoObjectId } from '../gens';
+import { mongoObjectId } from '../generators';
 import { doesNotReject } from 'assert';
 import { Mongoose } from 'mongoose';
 
