@@ -17,7 +17,7 @@ router.get(
     param("nSeats").isNumeric(),
     query(["checkOut", "checkIn"])
       .optional()
-      .isISO8601()
+      .isNumeric()
   ],
   FlightsController.getFilteredFlights
 );
