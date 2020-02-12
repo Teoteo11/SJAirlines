@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const flight_1 = require("../model/flight");
 const airplane_1 = require("../model/airplane");
 const express_validator_1 = require("express-validator");
+const moment_1 = __importDefault(require("moment"));
 exports.getFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.query.id) {
         try {
@@ -39,18 +43,30 @@ exports.getFilteredFlights = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
     try {
         let flights;
-        if (req.query.checkOut && req.query.destination) {
+        let checkIn = moment_1.default(new Date(req.query.checkIn).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
+        if (req.query.checkOut) {
+            let checkOut = moment_1.default(new Date(req.query.checkOut).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
             flights = (yield flight_1.FlightModel.find({
-                departure: req.params.idAirport,
-                checkIn: req.query.checkIn,
-                destination: req.query.destination,
-                checkOut: req.query.checkOut
+                departure: req.params.departure,
+                destination: req.params.destination,
+                checkIn: {
+                    $gte: checkIn.startOf("date").toString(),
+                    $lte: checkIn.endOf("date").toString()
+                },
+                checkOut: {
+                    $gte: checkOut.startOf("date").toString(),
+                    $lte: checkOut.endOf("date").toString()
+                }
             }));
         }
         else {
             flights = (yield flight_1.FlightModel.find({
-                departure: req.params.idAirport,
-                checkIn: req.query.checkIn
+                departure: req.params.departure,
+                destination: req.params.destination,
+                checkIn: {
+                    $gte: checkIn.startOf("date").toString(),
+                    $lte: checkIn.endOf("date").toString()
+                }
             }));
             flights = flights.filter((flight) => __awaiter(void 0, void 0, void 0, function* () {
                 const airplane = (yield airplane_1.AirplaneModel.findById(flight.idAirplane));

@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Flight, FlightModel } from "../model/flight";
 import { Airplane, AirplaneModel } from "../model/airplane";
 import { validationResult } from "express-validator";
+import moment from "moment";
+import { format } from "path";
 
 export const getFlights = async (req: Request, res: Response) => {
   if (req.query.id) {
@@ -28,17 +30,35 @@ export const getFilteredFlights = async (req: Request, res: Response) => {
   }
   try {
     let flights: Array<Flight>;
-    if (req.query.checkOut && req.query.destination) {
+    let checkIn = moment(
+      new Date(req.query.checkIn).toLocaleString(),
+      "YYYY-MM-DDTHH:mm:ssZ"
+    );
+    if (req.query.checkOut) {
+      let checkOut = moment(
+        new Date(req.query.checkOut).toLocaleString(),
+        "YYYY-MM-DDTHH:mm:ssZ"
+      );
       flights = (await FlightModel.find({
-        departure: req.params.idAirport,
-        checkIn: req.query.checkIn,
-        destination: req.query.destination,
-        checkOut: req.query.checkOut
+        departure: req.params.departure,
+        destination: req.params.destination,
+        checkIn: {
+          $gte: checkIn.startOf("date").toString(),
+          $lte: checkIn.endOf("date").toString()
+        },
+        checkOut: {
+          $gte: checkOut.startOf("date").toString(),
+          $lte: checkOut.endOf("date").toString()
+        }
       })) as any;
     } else {
       flights = (await FlightModel.find({
-        departure: req.params.idAirport,
-        checkIn: req.query.checkIn
+        departure: req.params.departure,
+        destination: req.params.destination,
+        checkIn: {
+          $gte: checkIn.startOf("date").toString(),
+          $lte: checkIn.endOf("date").toString()
+        }
       })) as any;
       flights = flights.filter(async flight => {
         const airplane: Airplane = (await AirplaneModel.findById(

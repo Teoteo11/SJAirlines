@@ -7,7 +7,7 @@ export const getAirports = async (req: Request, res: Response) => {
     let airport: any;
 
     req.query.id
-      ? (airport = await AirportModel.findById(req.params.id))
+      ? (airport = await AirportModel.findById(req.query.id))
       : (airport = await AirportModel.find());
 
     return res.status(200).json(airport);
