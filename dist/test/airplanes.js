@@ -8,7 +8,7 @@ const chai_1 = __importDefault(require("chai"));
 const chai_http_1 = __importDefault(require("chai-http"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const airplane_1 = require("../model/airplane");
-const gens_1 = require("../gens");
+const generators_1 = require("../generators");
 let should = chai_1.default.should();
 let app = require('../app');
 app.use(body_parser_1.default);
@@ -33,7 +33,7 @@ describe('GET /airplanes', () => {
     });
 });
 describe('POST /airplane', () => {
-    let testID = gens_1.mongoObjectId();
+    let testID = generators_1.mongoObjectId();
     it('should POST a new airplane', (done) => {
         let testAirplane = new airplane_1.AirplaneModel({
             id: testID,

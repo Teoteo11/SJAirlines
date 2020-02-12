@@ -18,7 +18,7 @@ const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // Description: return JSON containing all planes
-router.get("/", AirplaneController.getAirplanes);
+router.get("/", auth_1.auth, AirplaneController.getAirplanes);
 // Description: add one airplane 
 // ? Body parameters: airplane [ model ], airplane max number of seats [ numSeats ]
 router.post("/", [
