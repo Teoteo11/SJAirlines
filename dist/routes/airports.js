@@ -17,8 +17,6 @@ router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // Description: return JSON with all airports
 router.get("/", AirportController.getAirports);
-// Description: return JSON with one airport
-router.get("/:id", AirportController.getAirports);
 // Description:
 // ? Body params:
 router.post("/", AirportController.addSingleAirport);

@@ -18,7 +18,7 @@ exports.getAirports = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         let airport;
         req.query.id
-            ? (airport = yield airport_1.AirportModel.findById(req.params.id))
+            ? (airport = yield airport_1.AirportModel.findById(req.query.id))
             : (airport = yield airport_1.AirportModel.find());
         return res.status(200).json(airport);
     }

@@ -31,12 +31,12 @@ export const getFilteredFlights = async (req: Request, res: Response) => {
   try {
     let flights: Array<Flight>;
     let checkIn = moment(
-      new Date(req.query.checkIn).toLocaleString(),
+      new Date(Number(req.query.checkIn)).toLocaleString(),
       "YYYY-MM-DDTHH:mm:ssZ"
     );
     if (req.query.checkOut) {
       let checkOut = moment(
-        new Date(req.query.checkOut).toLocaleString(),
+        new Date(Number(req.query.checkOut)).toLocaleString(),
         "YYYY-MM-DDTHH:mm:ssZ"
       );
       flights = (await FlightModel.find({

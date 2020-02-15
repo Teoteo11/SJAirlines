@@ -23,6 +23,6 @@ router.get("/:departure/:destination/:nSeats", [
     express_validator_1.param("nSeats").isNumeric(),
     express_validator_1.query(["checkOut", "checkIn"])
         .optional()
-        .isISO8601()
+        .isNumeric()
 ], FlightsController.getFilteredFlights);
 module.exports = router;
