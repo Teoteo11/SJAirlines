@@ -7,21 +7,17 @@ const router = express.Router();
 // Description: return JSON containing flight/s
 // ? No params: return all flights
 // ? Query flight [id]: return single flight filtered by id
-router.get("/", 
-  [
-    query('id').isMongoId()
-  ], 
-    FlightsController.getFlights
-  );
+router.get("/", [query("id").isMongoId()], FlightsController.getFlights);
 
 // dargli un senso
 router.get(
-  "/:idAirport/:nSeats",
+  "/:departure/:destination/:nSeats",
   [
-    param("idAirport").isMongoId(),
+    param(["departure", "destination"]).isMongoId(),
     param("nSeats").isNumeric(),
-    query(["checkOut", "checkIn"]).isISO8601(),
-    query("destination").isString()
+    query(["checkOut", "checkIn"])
+      .optional()
+      .isISO8601()
   ],
   FlightsController.getFilteredFlights
 );
