@@ -10,10 +10,15 @@ import aiports from "./routes/airports";
 import airplanes from "./routes/airplanes";
 
 import login from "./routes/login";
+import http from "http";
 import { resolve } from "dns";
 import { rejects } from "assert";
+import socketIo from "socket.io";
+import { Airplane } from "./model/airplane";
 
 const app = express();
+let server = http.createServer(express());
+let io = socketIo(server);
 const port = process.env.APP_PORT || 3004;
 export const address: string =
   "mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/SJAirlines?retryWrites=true&w=majority";
@@ -33,6 +38,17 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+app.use(function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:8100");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 app.use("/airplanes", airplanes);
 app.use("/tickets", tickets);
 app.use("/companies", companies);
@@ -40,6 +56,14 @@ app.use("/users", users);
 app.use("/flights", flights);
 app.use("/airports", aiports);
 app.use("/login", login);
+
+io.on("connection", (socket: socketIo.Socket & { airplane: Airplane }) => {
+  socket.on("disconnect", () => {});
+
+  socket.on("set-airplane", (airplane: Airplane) => {
+    socket.airplane = airplane;
+  });
+});
 
 app.listen(port, () => {
   console.log(`🖥  Server running at port ${port}`);
@@ -54,4 +78,7 @@ mongoose
     console.log("❌  Error connection!");
   });
 
+server.listen(4000, () => {});
+
+export { io };
 module.exports = app;

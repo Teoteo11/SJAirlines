@@ -20,4 +20,4 @@ const airplaneSchema = new mongoose_1.Schema({
         trim: true
     }
 });
-exports.AirplaneModel = mongoose_1.default.model('Airplane', airplaneSchema);
+exports.AirplaneModel = mongoose_1.default.model("Airplane", airplaneSchema);
