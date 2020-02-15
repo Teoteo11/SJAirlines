@@ -22,7 +22,6 @@ router.post("/",
     body('model').isNumeric().notEmpty(),
     body('numSeats').isNumeric().notEmpty()
   ], 
-  auth,
     AirplaneController.addAirplane
   );
 
