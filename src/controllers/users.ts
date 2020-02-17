@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { UserModel } from "../model/user";
-import { body, param, validationResult, query } from 'express-validator';
-import chalk from 'chalk';
-
+import { body, param, validationResult, query } from "express-validator";
+import chalk from "chalk";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -20,8 +19,7 @@ export const getUsers = async (req: Request, res: Response) => {
     //     ]
     //   });
     //   return res.status(200).json(user);
-    // } 
-
+    // }
     else {
       let users = await UserModel.find();
       return res.status(200).json(users);
@@ -29,8 +27,7 @@ export const getUsers = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(400).json({ message: "User not found", error: error });
   }
-}
-
+};
 
 // router.get("/:id", async (req, res) => {
 //   try {
@@ -45,31 +42,25 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const addUser = async (req: Request, res: Response) => {
   //control of params added
-  if (
-    !Number(req.body.username) &&
-    !Number(req.body.name) &&
-    !Number(req.body.surname)
-  ) {
-    const userExist = await UserModel.findOne({ username: req.body.username });
-    if (userExist) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-    let user = new UserModel({
-      username: req.body.username,
-      name: req.body.name,
-      surname: req.body.surname,
-      tickets: []
-    });
-    try {
-      await user.save();
-      return res.status(201).json(user);
-    } catch (err) {
-      return res.status(400).json({ message: "Poco poco" });
-    }
-  }
-  return res.status(400).json({ message: "Invalid entry" });
-}
 
+  const userExist = await UserModel.findOne({ username: req.body.username });
+  if (userExist) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+  let user = new UserModel({
+    username: req.body.username,
+    name: req.body.name,
+    surname: req.body.surname,
+    password: req.body.password,
+    tickets: []
+  });
+  try {
+    await user.save();
+    return res.status(201).json(user);
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+};
 
 export const updateUser = async (req: Request, res: Response) => {
   if (req.body.name) {
@@ -101,8 +92,7 @@ export const updateUser = async (req: Request, res: Response) => {
     return res.json(user);
   }
   return res.status(400).json({ message: "Please,insert the values" });
-}
-
+};
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
@@ -116,4 +106,4 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(404).json({ message: "User not found" });
   }
-}
+};
