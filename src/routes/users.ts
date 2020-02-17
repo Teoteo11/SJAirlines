@@ -26,6 +26,9 @@ router.post(
       .notEmpty(),
     body("password")
       .isString()
+      .notEmpty(),
+    body("email")
+      .isEmail()
       .notEmpty()
   ],
   UserController.addUser

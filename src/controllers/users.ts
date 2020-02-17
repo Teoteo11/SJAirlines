@@ -44,6 +44,10 @@ export const addUser = async (req: Request, res: Response) => {
   //control of params added
 
   const userExist = await UserModel.findOne({ username: req.body.username });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: "Unprocessable entity" });
+  }
   if (userExist) {
     return res.status(400).json({ message: "User already exists" });
   }
@@ -52,6 +56,7 @@ export const addUser = async (req: Request, res: Response) => {
     name: req.body.name,
     surname: req.body.surname,
     password: req.body.password,
+    email: req.body.email,
     tickets: []
   });
   try {
