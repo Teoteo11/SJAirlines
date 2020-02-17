@@ -31,10 +31,10 @@ exports.userLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             let user = yield user_1.UserModel.findOne({ email: req.body.email, password: req.body.password });
             if (user) {
                 const token = jsonwebtoken_1.default.sign({ email: user.name, password: user.password }, private_key_1.privateKey);
-                res.status(200).header(token).json({ message: "Login eseguito correttamente", token });
+                return res.status(200).header(token).json({ message: "Login eseguito correttamente" });
             }
             else {
-                res.status(404).json({ message: "Email o password non corretti" });
+                return res.status(404).json({ message: "Email o password non corretti" });
             }
         }
         else {

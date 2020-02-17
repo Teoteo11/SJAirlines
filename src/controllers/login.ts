@@ -19,11 +19,14 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
     if (req.body.email && req.body.password) {
       let user: User | null = await UserModel.findOne({ email: req.body.email, password: req.body.password });
       if (user) {
-        const token = jwt.sign({ email: user.name, password: user.password }, privateKey);
-        res.status(200).header(token).json({ message: "Login eseguito correttamente", token });
-      } 
+        const token: string = jwt.sign({ email: user.email, password: user.password }, privateKey);
+        //res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+        res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+        res.setHeader('Authorization', token);
+        return res.status(200).json({ user });
+      }
       else {
-        res.status(404).json({ message: "Email o password non corretti" });
+        return res.status(404).json({ message: "Email o password non corretti." });
       }
     }
     else { 

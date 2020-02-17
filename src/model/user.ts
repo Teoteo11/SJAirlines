@@ -32,7 +32,8 @@ const UserSchema: Schema = new Schema({
 export interface User extends Document {
 	username: String;
 	name: String;
-	surname: String;
+    surname: String;
+    email: String;
 	password: String;
 	tickets: Array<Ticket>;
 }

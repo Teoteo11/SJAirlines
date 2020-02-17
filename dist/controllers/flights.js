@@ -43,9 +43,9 @@ exports.getFilteredFlights = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
     try {
         let flights;
-        let checkIn = moment_1.default(new Date(req.query.checkIn).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
+        let checkIn = moment_1.default(new Date(Number(req.query.checkIn)).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
         if (req.query.checkOut) {
-            let checkOut = moment_1.default(new Date(req.query.checkOut).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
+            let checkOut = moment_1.default(new Date(Number(req.query.checkOut)).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
             flights = (yield flight_1.FlightModel.find({
                 departure: req.params.departure,
                 destination: req.params.destination,
