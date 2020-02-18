@@ -17,8 +17,6 @@ import socketIo from "socket.io";
 import { Airplane } from "./model/airplane";
 
 const app = express();
-let server = http.createServer(express());
-let io = socketIo(server);
 const port = process.env.APP_PORT || 3004;
 export const address: string =
   "mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/SJAirlines?retryWrites=true&w=majority";
@@ -57,16 +55,18 @@ app.use("/flights", flights);
 app.use("/airports", aiports);
 app.use("/login", login);
 
+const server = app.listen(port, () => {
+  console.log(`🖥  Server running at port ${port}`);
+});
+
+let io = socketIo(server);
+
 io.on("connection", (socket: socketIo.Socket & { airplane: Airplane }) => {
   socket.on("disconnect", () => {});
 
   socket.on("set-airplane", (airplane: Airplane) => {
     socket.airplane = airplane;
   });
-});
-
-app.listen(port, () => {
-  console.log(`🖥  Server running at port ${port}`);
 });
 
 mongoose
@@ -78,7 +78,6 @@ mongoose
     console.log("❌  Error connection!");
   });
 //ora 4000 prima port
-server.listen(4000, () => {});
 
 export { io };
 module.exports = app;
