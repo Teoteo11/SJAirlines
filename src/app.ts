@@ -77,8 +77,8 @@ mongoose
   .catch(() => {
     console.log("❌  Error connection!");
   });
-
-server.listen(port, () => {});
+//ora 4000 prima port
+server.listen(4000, () => {});
 
 export { io };
 module.exports = app;
