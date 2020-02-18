@@ -38,7 +38,7 @@ router.post(
 router.put(
   "/",
   [
-    body("id")
+    body("_id")
       .isMongoId()
       .notEmpty(),
     body("model")

@@ -42,7 +42,7 @@ export const editAirplane = async (
   if (errors.isEmpty()) {
     try {
       await AirplaneModel.findByIdAndUpdate(
-        req.body.id,
+        req.body._id,
         { model: req.body.model, numSeats: req.body.numSeats },
         { new: false, omitUndefined: true }
       );

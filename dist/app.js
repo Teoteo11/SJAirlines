@@ -13,12 +13,8 @@ const flights_1 = __importDefault(require("./routes/flights"));
 const airports_1 = __importDefault(require("./routes/airports"));
 const airplanes_1 = __importDefault(require("./routes/airplanes"));
 const login_1 = __importDefault(require("./routes/login"));
-const http_1 = __importDefault(require("http"));
 const socket_io_1 = __importDefault(require("socket.io"));
 const app = express_1.default();
-let server = http_1.default.createServer(express_1.default());
-let io = socket_io_1.default(server);
-exports.io = io;
 const port = process.env.APP_PORT || 3004;
 exports.address = "mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/SJAirlines?retryWrites=true&w=majority";
 app.use(body_parser_1.default.json());
@@ -42,14 +38,16 @@ app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
 app.use("/airports", airports_1.default);
 app.use("/login", login_1.default);
+const server = app.listen(port, () => {
+    console.log(`🖥  Server running at port ${port}`);
+});
+let io = socket_io_1.default(server);
+exports.io = io;
 io.on("connection", (socket) => {
     socket.on("disconnect", () => { });
     socket.on("set-airplane", (airplane) => {
         socket.airplane = airplane;
     });
-});
-app.listen(port, () => {
-    console.log(`🖥  Server running at port ${port}`);
 });
 mongoose_1.default
     .connect(exports.address, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -59,5 +57,4 @@ mongoose_1.default
     .catch(() => {
     console.log("❌  Error connection!");
 });
-server.listen(4000, () => { });
 module.exports = app;
