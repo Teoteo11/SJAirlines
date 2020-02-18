@@ -78,7 +78,7 @@ mongoose
     console.log("❌  Error connection!");
   });
 
-server.listen(4000, () => {});
+server.listen(port, () => {});
 
 export { io };
 module.exports = app;
