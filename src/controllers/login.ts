@@ -21,7 +21,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
       if (user) {
         const token: string = jwt.sign({ email: user.email, password: user.password }, privateKey);
         //res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
-        res.setHeader('Access-Control-Allow-Origin', 'Authorization');
+        res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Expose-Headers', 'Authorization');
         res.setHeader('Authorization', token);
         return res.status(200).json(user.id);
