@@ -29,10 +29,12 @@ const UserSchema = new mongoose_1.Schema({
         required: true,
         trim: true
     },
-    tickets: [{
+    tickets: [
+        {
             type: mongoose_1.Schema.Types.ObjectId,
             required: false,
-            ref: 'Ticket'
-        }]
+            ref: "Ticket"
+        }
+    ]
 });
-exports.UserModel = mongoose_1.default.model('User', UserSchema);
+exports.UserModel = mongoose_1.default.model("User", UserSchema);
