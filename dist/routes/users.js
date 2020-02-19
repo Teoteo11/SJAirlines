@@ -19,14 +19,26 @@ router.use(body_parser_1.default.urlencoded({ extended: true }));
 // Description: return JSON containing all users
 router.get("/", UserController.getUsers);
 // TODO: validazione tramite express validator
-// ? Body parameters: username, name, surname 
+// ? Body parameters: username, name, surname
 router.post("/", [
-    express_validator_1.body("username").isString().notEmpty(),
-    express_validator_1.body("name").isString().notEmpty(),
-    express_validator_1.body("surname").isString().notEmpty()
+    express_validator_1.body("username")
+        .isString()
+        .notEmpty(),
+    express_validator_1.body("name")
+        .isString()
+        .notEmpty(),
+    express_validator_1.body("surname")
+        .isString()
+        .notEmpty(),
+    express_validator_1.body("password")
+        .isString()
+        .notEmpty(),
+    express_validator_1.body("email")
+        .isEmail()
+        .notEmpty()
 ], UserController.addUser);
 // Description: update values of a single user
-// ? Body parameters: 
+// ? Body parameters:
 router.put("/", UserController.updateUser);
 // Description: delete single user by username
 router.delete("/:username", UserController.deleteUser);

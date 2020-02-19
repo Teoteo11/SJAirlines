@@ -46,7 +46,7 @@ exports.editAirplane = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const errors = express_validator_1.validationResult(req);
     if (errors.isEmpty()) {
         try {
-            yield airplane_1.AirplaneModel.findByIdAndUpdate(req.body.id, { model: req.body.model, numSeats: req.body.numSeats }, { new: false, omitUndefined: true });
+            yield airplane_1.AirplaneModel.findByIdAndUpdate(req.body._id, { model: req.body.model, numSeats: req.body.numSeats }, { new: false, omitUndefined: true });
             // ** See here https://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate
             // ** for further information about -omitIUndefined- value.
             res.status(200).json({ message: "Airplane edited correctly." });

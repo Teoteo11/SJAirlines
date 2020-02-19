@@ -16,6 +16,8 @@ import { rejects } from "assert";
 import socketIo from "socket.io";
 import { Airplane } from "./model/airplane";
 
+var cors = require("cors");
+
 const app = express();
 const port = process.env.APP_PORT || 3004;
 export const address: string =
@@ -54,6 +56,10 @@ app.use("/users", users);
 app.use("/flights", flights);
 app.use("/airports", aiports);
 app.use("/login", login);
+
+app.use(
+  cors({ origin: "http://localhost:8100" }, { origin: "http://localhost:8200" })
+);
 
 const server = app.listen(port, () => {
   console.log(`🖥  Server running at port ${port}`);

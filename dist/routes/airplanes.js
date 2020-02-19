@@ -38,7 +38,7 @@ router.post("/", [
 // Description: update values of a specific airplane
 // ? Body parameters: airplane [ id ], airplane [ model ], airplane max number of seats [ numSeats ]
 router.put("/", [
-    express_validator_1.body("id")
+    express_validator_1.body("_id")
         .isMongoId()
         .notEmpty(),
     express_validator_1.body("model")
