@@ -23,7 +23,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
         //res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Expose-Headers', 'Authorization');
         res.setHeader('Authorization', token);
-        return res.status(200).json({ user });
+        return res.status(200).json(user.id);
       }
       else {
         return res.status(404).json({ message: "Email o password non corretti." });

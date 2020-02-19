@@ -30,11 +30,14 @@ exports.userLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         if (req.body.email && req.body.password) {
             let user = yield user_1.UserModel.findOne({ email: req.body.email, password: req.body.password });
             if (user) {
-                const token = jsonwebtoken_1.default.sign({ email: user.name, password: user.password }, private_key_1.privateKey);
-                return res.status(200).header(token).json({ message: "Login eseguito correttamente" });
+                const token = jsonwebtoken_1.default.sign({ email: user.email, password: user.password }, private_key_1.privateKey);
+                //res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+                res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+                res.setHeader('Authorization', token);
+                return res.status(200).json(user.id);
             }
             else {
-                return res.status(404).json({ message: "Email o password non corretti" });
+                return res.status(404).json({ message: "Email o password non corretti." });
             }
         }
         else {
