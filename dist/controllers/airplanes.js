@@ -18,9 +18,9 @@ const chalk_1 = __importDefault(require("chalk"));
 exports.getAirplanes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let airplane;
-        req.query.id ?
-            airplane = yield airplane_1.AirplaneModel.findById(req.query.id) :
-            airplane = yield airplane_1.AirplaneModel.find();
+        req.query.id
+            ? (airplane = yield airplane_1.AirplaneModel.findById(req.query.id))
+            : (airplane = yield airplane_1.AirplaneModel.find());
         return res.status(200).json(airplane);
     }
     catch (error) {
@@ -42,14 +42,15 @@ exports.addAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(500).json({ message: error });
     }
 });
-exports.editAirplane = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.editAirplane = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);
     if (errors.isEmpty()) {
         try {
-            yield airplane_1.AirplaneModel.findByIdAndUpdate(req.body.id, { model: req.body.model, numSeats: req.body.numSeats }, { new: false, omitUndefined: true });
+            yield airplane_1.AirplaneModel.findByIdAndUpdate(req.body._id, { model: req.body.model, numSeats: req.body.numSeats }, { new: false, omitUndefined: true });
             // ** See here https://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate
             // ** for further information about -omitIUndefined- value.
-            return res.status(200).json({ message: "Airplane edited correctly." });
+            res.status(200).json({ message: "Airplane edited correctly." });
+            return next();
         }
         catch (error) {
             console.log(chalk_1.default.redBright(error));

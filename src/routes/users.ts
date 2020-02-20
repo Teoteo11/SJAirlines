@@ -11,18 +11,31 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.get("/", UserController.getUsers);
 
 // TODO: validazione tramite express validator
-// ? Body parameters: username, name, surname 
-router.post("/", 
+// ? Body parameters: username, name, surname
+router.post(
+  "/",
   [
-    body("username").isString().notEmpty(),
-    body("name").isString().notEmpty(),
-    body("surname").isString().notEmpty()
+    body("username")
+      .isString()
+      .notEmpty(),
+    body("name")
+      .isString()
+      .notEmpty(),
+    body("surname")
+      .isString()
+      .notEmpty(),
+    body("password")
+      .isString()
+      .notEmpty(),
+    body("email")
+      .isEmail()
+      .notEmpty()
   ],
-    UserController.addUser
-  );
+  UserController.addUser
+);
 
 // Description: update values of a single user
-// ? Body parameters: 
+// ? Body parameters:
 router.put("/", UserController.updateUser);
 
 // Description: delete single user by username
