@@ -11,11 +11,13 @@ router.get("/", [query("id").isMongoId()], FlightsController.getFlights);
 
 // dargli un senso
 router.get(
-  "/:departure/:destination/:nSeats",
+  "/:nSeats",
   [
-    param(["departure", "destination"]).isMongoId(),
     param("nSeats").isNumeric(),
-    query(["checkOut", "checkIn"])
+    query(["destination", "departure"])
+      .optional()
+      .isMongoId(),
+    query("checkIn")
       .optional()
       .isNumeric()
   ],
