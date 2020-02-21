@@ -48,7 +48,7 @@ exports.addSingleTicket = (req, res) => __awaiter(void 0, void 0, void 0, functi
     try {
         const [user, company, idAirplane] = yield Promise.all([
             user_1.UserModel.findById(req.body.idUser),
-            company_1.CompanyModel.find({ flights: [req.body.idCompany] }),
+            company_1.CompanyModel.findOne({ flights: req.body.idFlight }),
             flight_1.FlightModel.findById(req.body.idFlight).select("idAirplane")
         ]);
         if (!user) {
@@ -64,7 +64,6 @@ exports.addSingleTicket = (req, res) => __awaiter(void 0, void 0, void 0, functi
         if (Number(numSeats) === 0) {
             return res.status(400).json({ message: "Airplane full" });
         }
-        return res.status(200).json(company);
         const ticket = new ticket_1.TicketModel({
             idCompany: req.body.idCompany,
             idFlight: req.body.idFlight,

@@ -18,6 +18,7 @@ router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // Description: return JSON containing all users
 router.get("/", UserController.getUsers);
+router.get("/:idUser/tickets", UserController.getTickets);
 // TODO: validazione tramite express validator
 // ? Body parameters: username, name, surname
 router.post("/", [

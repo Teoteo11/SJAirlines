@@ -108,7 +108,7 @@ export const deleteSingleTicket = async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findOne({ tickets: req.params.id });
     const ticket = await TicketModel.findByIdAndDelete(req.params.id);
-    await UserModel.updateOne(user, { $pull: { ticket: req.body.id } });
+    await UserModel.updateOne(user, { $pull: { ticket: req.params.id } });
     return res.status(200).json({ message: "Ticket deleted", ticket });
   } catch (err) {
     return res.status(500).json({ message: err });
