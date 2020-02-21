@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { UserModel } from "../model/user";
 import { body, param, validationResult, query } from "express-validator";
-import chalk from "chalk";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {

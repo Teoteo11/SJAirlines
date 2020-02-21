@@ -20,9 +20,6 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
       let user: User | null = await UserModel.findOne({ email: req.body.email, password: req.body.password });
       if (user) {
         const token: string = jwt.sign({ email: user.email, password: user.password }, privateKey);
-        //res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Expose-Headers', 'Authorization');
         res.setHeader('Authorization', token);
         return res.status(200).json(user.id);
       }

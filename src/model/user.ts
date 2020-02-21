@@ -32,21 +32,12 @@ const UserSchema: Schema = new Schema({
 });
 
 export interface User extends Document {
-<<<<<<< HEAD
-	username: String;
-	name: String;
-    surname: String;
-    email: String;
-	password: String;
-	tickets: Array<Ticket>;
-=======
   username: String;
   name: String;
   surname: String;
   email: String;
   password: String;
   tickets: Array<Ticket>;
->>>>>>> 9c3692c403aa3460c4259c8f4d9c03e0923cf53b
 }
 
 export const UserModel: Model<User> = mongoose.model("User", UserSchema);

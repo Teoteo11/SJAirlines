@@ -25,11 +25,6 @@ router.post("/", [
     // TODO: check id ->
     // Quando passiamo l'id a mongoose, lui crea l'oggetto con l'id dato da noi nel campo _id
     // o crea un campo apposito con nome id? (credo la 1°)
-<<<<<<< HEAD
-    express_validator_1.body('id').isMongoId().optional(),
-    express_validator_1.body('model').isNumeric().notEmpty(),
-    express_validator_1.body('numSeats').isNumeric().notEmpty()
-=======
     express_validator_1.body("id")
         .isMongoId()
         .optional(),
@@ -39,7 +34,6 @@ router.post("/", [
     express_validator_1.body("numSeats")
         .isNumeric()
         .notEmpty()
->>>>>>> 9c3692c403aa3460c4259c8f4d9c03e0923cf53b
 ], AirplaneController.addAirplane);
 // Description: update values of a specific airplane
 // ? Body parameters: airplane [ id ], airplane [ model ], airplane max number of seats [ numSeats ]

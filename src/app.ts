@@ -10,10 +10,8 @@ import aiports from "./routes/airports";
 import airplanes from "./routes/airplanes";
 
 import login from "./routes/login";
-import http from "http";
-import { resolve } from "dns";
-import { rejects } from "assert";
 import socketIo from "socket.io";
+import cors from 'cors';
 import { Airplane } from "./model/airplane";
 
 // var cors = require("cors");
@@ -25,27 +23,13 @@ export const address: string =
 
 app.use(bodyParse.json());
 
+app.use(cors());
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  next();
-});
-
-app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:8100");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE,PUT");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader('Access-Control-Expose-Headers', '*');
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
 
@@ -56,10 +40,6 @@ app.use("/users", users);
 app.use("/flights", flights);
 app.use("/airports", aiports);
 app.use("/login", login);
-
-// app.use(
-//   cors({ origin: "http://localhost:8100" }, { origin: "http://localhost:8200" })
-// );
 
 const server = app.listen(port, () => {
   console.log(`🖥  Server running at port ${port}`);
