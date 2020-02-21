@@ -14,7 +14,10 @@ const airports_1 = __importDefault(require("./routes/airports"));
 const airplanes_1 = __importDefault(require("./routes/airplanes"));
 const login_1 = __importDefault(require("./routes/login"));
 const socket_io_1 = __importDefault(require("socket.io"));
+<<<<<<< HEAD
 const cors_1 = __importDefault(require("cors"));
+=======
+>>>>>>> fffd6505d58ef1eadcf9a00f1d437e59aeec35dd
 // var cors = require("cors");
 const app = express_1.default();
 const port = process.env.APP_PORT || 3004;
@@ -35,6 +38,12 @@ app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
 app.use("/airports", airports_1.default);
 app.use("/login", login_1.default);
+<<<<<<< HEAD
+=======
+// app.use(
+//   cors({ origin: "http://localhost:8100" }, { origin: "http://localhost:8200" })
+// );
+>>>>>>> fffd6505d58ef1eadcf9a00f1d437e59aeec35dd
 const server = app.listen(port, () => {
     console.log(`🖥  Server running at port ${port}`);
 });

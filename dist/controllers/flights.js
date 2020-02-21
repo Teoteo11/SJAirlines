@@ -43,42 +43,28 @@ exports.getFilteredFlights = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
     try {
         let flights;
-        let checkIn = moment_1.default(new Date(Number(req.query.checkIn)).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
-        if (req.query.checkOut) {
-            let checkOut = moment_1.default(new Date(Number(req.query.checkOut)).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
-            flights = (yield flight_1.FlightModel.find({
-                departure: req.params.departure,
-                destination: req.params.destination,
-                checkIn: {
+        let query = req.query;
+        Object.keys(query).forEach(key => key !== "destination" && key !== "departure" && delete query[key]);
+        if (req.query.checkIn) {
+            const checkIn = moment_1.default(new Date(Number(req.query.checkIn)).toLocaleString(), "YYYY-MM-DDTHH:mm:ssZ");
+            flights = (yield flight_1.FlightModel.find(Object.assign(Object.assign({ departure: req.params.departure }, query), { checkIn: {
                     $gte: checkIn.startOf("date").toString(),
                     $lte: checkIn.endOf("date").toString()
-                },
-                checkOut: {
-                    $gte: checkOut.startOf("date").toString(),
-                    $lte: checkOut.endOf("date").toString()
-                }
-            }));
+                } })));
         }
         else {
-            flights = (yield flight_1.FlightModel.find({
-                departure: req.params.departure,
-                destination: req.params.destination,
-                checkIn: {
-                    $gte: checkIn.startOf("date").toString(),
-                    $lte: checkIn.endOf("date").toString()
-                }
-            }));
-            flights = flights.filter((flight) => __awaiter(void 0, void 0, void 0, function* () {
-                const airplane = (yield airplane_1.AirplaneModel.findById(flight.idAirplane));
-                if (Number(airplane.numSeats) - Number(req.params.nSeats) < 0) {
-                    return false;
-                }
-                else {
-                    return true;
-                }
-            }));
-            return res.status(200).json(flights);
+            flights = (yield flight_1.FlightModel.find(Object.assign({ departure: req.params.departure }, query)));
         }
+        flights = flights.filter((flight) => __awaiter(void 0, void 0, void 0, function* () {
+            const airplane = (yield airplane_1.AirplaneModel.findById(flight.idAirplane));
+            if (Number(airplane.numSeats) - Number(req.params.nSeats) < 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }));
+        return res.status(200).json(flights);
     }
     catch (err) {
         return res.status(500).json({ message: err });

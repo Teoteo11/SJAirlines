@@ -18,10 +18,12 @@ const router = express_1.default.Router();
 // ? Query flight [id]: return single flight filtered by id
 router.get("/", [express_validator_1.query("id").isMongoId()], FlightsController.getFlights);
 // dargli un senso
-router.get("/:departure/:destination/:nSeats", [
-    express_validator_1.param(["departure", "destination"]).isMongoId(),
+router.get("/:nSeats", [
     express_validator_1.param("nSeats").isNumeric(),
-    express_validator_1.query(["checkOut", "checkIn"])
+    express_validator_1.query(["destination", "departure"])
+        .optional()
+        .isMongoId(),
+    express_validator_1.query("checkIn")
         .optional()
         .isNumeric()
 ], FlightsController.getFilteredFlights);
