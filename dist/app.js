@@ -1,6 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function(mod) {
-  return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
@@ -22,11 +22,12 @@ exports.address = "mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/
 app.use(body_parser_1.default.json());
 app.use(cors_1.default());
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  next();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader('Access-Control-Expose-Headers', '*');
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
 });
 app.use("/airplanes", airplanes_1.default);
 app.use("/tickets", tickets_1.default);
@@ -35,26 +36,23 @@ app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
 app.use("/airports", airports_1.default);
 app.use("/login", login_1.default);
-// app.use(
-//   cors({ origin: "http://localhost:8100" }, { origin: "http://localhost:8200" })
-// );
 const server = app.listen(port, () => {
-  console.log(`🖥  Server running at port ${port}`);
+    console.log(`🖥  Server running at port ${port}`);
 });
 let io = socket_io_1.default(server);
 exports.io = io;
 io.on("connection", (socket) => {
-  socket.on("disconnect", () => {});
-  socket.on("set-airplane", (airplane) => {
-    socket.airplane = airplane;
-  });
+    socket.on("disconnect", () => { });
+    socket.on("set-airplane", (airplane) => {
+        socket.airplane = airplane;
+    });
 });
 mongoose_1.default
-  .connect(exports.address, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+    .connect(exports.address, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
     console.log("🗄  Database connected");
-  })
-  .catch(() => {
+})
+    .catch(() => {
     console.log("❌  Error connection!");
-  });
+});
 module.exports = app;

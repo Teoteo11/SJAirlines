@@ -10,12 +10,11 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // Description: return JSON containing all planes
-router.get("/", AirplaneController.getAirplanes);
+router.get('/', AirplaneController.getAirplanes);
 
 // Description: add one airplane
 // ? Body parameters: airplane [ model ], airplane max number of seats [ numSeats ]
-router.post(
-  "/",
+router.post('/',
   [
     // TODO: check id ->
     // Quando passiamo l'id a mongoose, lui crea l'oggetto con l'id dato da noi nel campo _id
@@ -30,13 +29,13 @@ router.post(
       .isNumeric()
       .notEmpty()
   ],
+  auth,
   AirplaneController.addAirplane
 );
 
 // Description: update values of a specific airplane
 // ? Body parameters: airplane [ id ], airplane [ model ], airplane max number of seats [ numSeats ]
-router.put(
-  "/",
+router.put('/',
   [
     body("_id")
       .isMongoId()
@@ -48,6 +47,7 @@ router.put(
       .isNumeric()
       .optional()
   ],
+  auth,
   AirplaneController.editAirplane,
   () => {
     io.emit("airplane-changed", {
@@ -58,13 +58,12 @@ router.put(
 );
 
 // Description: delete all airplanes
-router.delete("/", AirplaneController.deleteAllAirplanes);
+router.delete('/', auth, AirplaneController.deleteAllAirplanes);
 
 // Description: delete single airplane by id
 // ? URL parameters: airplane [ id ]
-router.delete(
-  "/:id",
-  [param("id").isMongoId()],
+router.delete('/:id',
+  [param('id').isMongoId()],
   AirplaneController.deleteSingleAirplane
 );
 
