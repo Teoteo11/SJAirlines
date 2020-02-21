@@ -41,7 +41,7 @@ export const addSingleTicket = async (
   try {
     const [user, company, idAirplane] = await Promise.all([
       UserModel.findById(req.body.idUser),
-      CompanyModel.find({ flights: req.body.idFlight }),
+      CompanyModel.findOne({ flights: req.body.idFlight }),
       FlightModel.findById(req.body.idFlight).select("idAirplane")
     ]);
     if (!user) {
