@@ -17,24 +17,13 @@ const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // Description: return JSON containing all tickets
-router.get("/", [
-    express_validator_1.query("id").isMongoId(),
-    express_validator_1.query("email").isEmail()
-], TicketController.getTickets);
+router.get("/", [express_validator_1.query("id").isMongoId(), express_validator_1.query("email").isEmail()], TicketController.getTickets);
 // Description: add new ticket
-// ? Body params: 
-router.post("/", [
-    express_validator_1.body("idCompany").isMongoId(),
-    express_validator_1.body("idFlight").isMongoId(),
-    express_validator_1.body("idUser").isMongoId()
-], TicketController.addSingleTicket);
+// ? Body params:
+router.post("/", [express_validator_1.body("idFlight").isMongoId(), express_validator_1.body("idUser").isMongoId()], TicketController.addSingleTicket);
 // Description: update single ticket
 // ? Body params:
-router.put("/:id", [
-    express_validator_1.param("id").isMongoId()
-], TicketController.editSingleTicket);
+router.put("/:id", [express_validator_1.param("id").isMongoId()], TicketController.editSingleTicket);
 // Description: delete one ticket by id
-router.delete("/:id", [
-    express_validator_1.param("id").isMongoId()
-], TicketController.deleteSingleTicket);
+router.delete("/:id", [express_validator_1.param("id").isMongoId()], TicketController.deleteSingleTicket);
 module.exports = router;
