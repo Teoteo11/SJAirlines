@@ -1,6 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importDefault = (this && this.__importDefault) || function(mod) {
+  return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
@@ -14,10 +14,7 @@ const airports_1 = __importDefault(require("./routes/airports"));
 const airplanes_1 = __importDefault(require("./routes/airplanes"));
 const login_1 = __importDefault(require("./routes/login"));
 const socket_io_1 = __importDefault(require("socket.io"));
-<<<<<<< HEAD
 const cors_1 = __importDefault(require("cors"));
-=======
->>>>>>> fffd6505d58ef1eadcf9a00f1d437e59aeec35dd
 // var cors = require("cors");
 const app = express_1.default();
 const port = process.env.APP_PORT || 3004;
@@ -25,11 +22,11 @@ exports.address = "mongodb+srv://Matteo:simoneaiello@cluster0-tclhz.mongodb.net/
 app.use(body_parser_1.default.json());
 app.use(cors_1.default());
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
 });
 app.use("/airplanes", airplanes_1.default);
 app.use("/tickets", tickets_1.default);
@@ -38,29 +35,26 @@ app.use("/users", users_1.default);
 app.use("/flights", flights_1.default);
 app.use("/airports", airports_1.default);
 app.use("/login", login_1.default);
-<<<<<<< HEAD
-=======
 // app.use(
 //   cors({ origin: "http://localhost:8100" }, { origin: "http://localhost:8200" })
 // );
->>>>>>> fffd6505d58ef1eadcf9a00f1d437e59aeec35dd
 const server = app.listen(port, () => {
-    console.log(`🖥  Server running at port ${port}`);
+  console.log(`🖥  Server running at port ${port}`);
 });
 let io = socket_io_1.default(server);
 exports.io = io;
 io.on("connection", (socket) => {
-    socket.on("disconnect", () => { });
-    socket.on("set-airplane", (airplane) => {
-        socket.airplane = airplane;
-    });
+  socket.on("disconnect", () => {});
+  socket.on("set-airplane", (airplane) => {
+    socket.airplane = airplane;
+  });
 });
 mongoose_1.default
-    .connect(exports.address, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
+  .connect(exports.address, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
     console.log("🗄  Database connected");
-})
-    .catch(() => {
+  })
+  .catch(() => {
     console.log("❌  Error connection!");
-});
+  });
 module.exports = app;
