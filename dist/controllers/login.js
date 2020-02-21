@@ -32,7 +32,7 @@ exports.userLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             if (user) {
                 const token = jsonwebtoken_1.default.sign({ email: user.email, password: user.password }, private_key_1.privateKey);
                 res.setHeader('Authorization', token);
-                return res.status(200).json(user.id);
+                return res.status(200).json(user);
             }
             else {
                 return res.status(404).json({ message: "Email o password non corretti." });
