@@ -105,3 +105,12 @@ exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.status(404).json({ message: "User not found" });
     }
 });
+exports.getTickets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res
+            .status(200)
+            .json((yield user_1.UserModel.findOne({ tickets: req.params.tickets }))
+            .tickets);
+    }
+    catch (error) { }
+});

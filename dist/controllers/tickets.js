@@ -18,7 +18,9 @@ const flight_1 = require("../model/flight");
 exports.getTickets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.query.id || req.query.email) {
         try {
-            const ticket = yield ticket_1.TicketModel.find({ $or: [req.query.id, req.query.user] });
+            const ticket = yield ticket_1.TicketModel.find({
+                $or: [req.query.id, req.query.user]
+            });
             if (!ticket) {
                 return res.status(404).json({ message: "Ticket not found." });
             }
@@ -46,8 +48,8 @@ exports.addSingleTicket = (req, res) => __awaiter(void 0, void 0, void 0, functi
     try {
         const [user, company, idAirplane] = yield Promise.all([
             user_1.UserModel.findById(req.body.idUser),
-            company_1.CompanyModel.findById(req.body.idCompany),
-            flight_1.FlightModel.findById(req.body.idFlight).select("idAirplane"),
+            company_1.CompanyModel.findOne({ flights: req.body.idFlight }),
+            flight_1.FlightModel.findById(req.body.idFlight).select("idAirplane")
         ]);
         if (!user) {
             return res.status(400).json({ message: "User not exists" });
@@ -70,7 +72,9 @@ exports.addSingleTicket = (req, res) => __awaiter(void 0, void 0, void 0, functi
         yield Promise.all([
             ticket.save(),
             user_1.UserModel.updateOne(user, { $push: { ticket: ticket._id } }),
-            airplane_1.AirplaneModel.findByIdAndUpdate(idAirplane, { numSeats: Number(numSeats) - 1 })
+            airplane_1.AirplaneModel.findByIdAndUpdate(idAirplane, {
+                numSeats: Number(numSeats) - 1
+            })
         ]);
         return res.status(200).json(ticket);
     }

@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
-import { UserModel } from "../model/user";
+import { UserModel, User } from "../model/user";
 import { body, param, validationResult, query } from "express-validator";
+import { TicketModel } from "../model/ticket";
+import { AirplaneModel } from "../model/airplane";
+import { CompanyModel } from "../model/company";
+import { FlightModel } from "../model/flight";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -109,5 +113,80 @@ export const deleteUser = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "User eliminated :", user });
   } catch (error) {
     return res.status(404).json({ message: "User not found" });
+  }
+};
+
+export const getTickets = async (req: Request, res: Response) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: "Unprocessable entity" });
+    }
+    res
+      .status(200)
+      .json(((await UserModel.findById(req.params.idUser)) as User).tickets);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export const addTicket = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: "Unprocessable entity" });
+  }
+  try {
+    const [user, company, idAirplane] = await Promise.all([
+      UserModel.findById(req.params.idUser),
+      CompanyModel.findOne({ flights: req.body.idFlight }),
+      FlightModel.findById(req.body.idFlight).select("idAirplane")
+    ]);
+    if (!user) {
+      return res.status(400).json({ message: "User not exists" });
+    }
+    if (!company) {
+      return res.status(400).json({ message: "Company not exists" });
+    }
+    if (!idAirplane) {
+      return res.status(400).json({ message: "Flight not exists" });
+    }
+
+    let numSeats = await AirplaneModel.findById(idAirplane).select("numSeats");
+    if (Number(numSeats) === 0) {
+      return res.status(400).json({ message: "Airplane full" });
+    }
+
+    const ticket = new TicketModel({
+      idCompany: req.body.idCompany,
+      idFlight: req.body.idFlight,
+      isChecked: false
+    });
+
+    await Promise.all([
+      ticket.save(),
+      UserModel.updateOne(user, { $push: { ticket: ticket._id } }),
+      AirplaneModel.findByIdAndUpdate(idAirplane, {
+        numSeats: Number(numSeats) - 1
+      })
+    ]);
+    return res.status(200).json(ticket);
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+};
+
+export const deleteTicket = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: "Unprocessable entity" });
+  }
+
+  try {
+    const user = await UserModel.findById(req.params.Id);
+    const ticket = await TicketModel.findByIdAndDelete(req.params.id);
+    await UserModel.updateOne(user, { $pull: { ticket: req.params.id } });
+    return res.status(200).json({ message: "Ticket deleted", ticket });
+  } catch (err) {
+    return res.status(500).json({ message: err });
   }
 };
