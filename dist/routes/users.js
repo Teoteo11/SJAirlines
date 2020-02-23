@@ -18,7 +18,7 @@ router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // Description: return JSON containing all users
 router.get("/", UserController.getUsers);
-router.get("/:idUser/tickets", UserController.getTickets);
+router.get("/:idUser/tickets", [express_validator_1.param("idUser").isMongoId()], UserController.getTickets);
 // TODO: validazione tramite express validator
 // ? Body parameters: username, name, surname
 router.post("/", [
@@ -38,9 +38,11 @@ router.post("/", [
         .isEmail()
         .notEmpty()
 ], UserController.addUser);
+router.post("/:idUser/ticket", [express_validator_1.param("idUser").isMongoId(), express_validator_1.body("idFlight").isMongoId()], UserController.addTicket);
 // Description: update values of a single user
 // ? Body parameters:
 router.put("/", UserController.updateUser);
 // Description: delete single user by username
 router.delete("/:username", UserController.deleteUser);
+router.delete("/:idUser/ticket/:idTicket", [express_validator_1.param("idUser").isMongoId(), express_validator_1.param("idTicket").isMongoId()], UserController.deleteTicket);
 module.exports = router;

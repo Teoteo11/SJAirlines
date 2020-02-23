@@ -21,6 +21,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
       if (user) {
         const token: string = jwt.sign({ email: user.email, password: user.password }, privateKey);
         res.setHeader('Authorization', token);
+        
         return res.status(200).json(user);
       }
       else {

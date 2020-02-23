@@ -106,7 +106,7 @@ exports.deleteSingleTicket = (req, res) => __awaiter(void 0, void 0, void 0, fun
     try {
         const user = yield user_1.UserModel.findOne({ tickets: req.params.id });
         const ticket = yield ticket_1.TicketModel.findByIdAndDelete(req.params.id);
-        yield user_1.UserModel.updateOne(user, { $pull: { ticket: req.body.id } });
+        yield user_1.UserModel.updateOne(user, { $pull: { ticket: req.params.id } });
         return res.status(200).json({ message: "Ticket deleted", ticket });
     }
     catch (err) {
