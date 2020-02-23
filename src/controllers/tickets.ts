@@ -7,6 +7,7 @@ import { UserModel } from "../model/user";
 import { CompanyModel } from "../model/company";
 import { FlightModel } from "../model/flight";
 
+
 export const getTickets = async (req: Request, res: Response) => {
   if (req.query.id || req.query.email) {
     try {
@@ -29,6 +30,18 @@ export const getTickets = async (req: Request, res: Response) => {
     }
   }
 };
+
+
+export const getTicket = async(req: Request, res: Response) => {
+  try {
+    const ticket = await TicketModel.findById(req.params.id);
+    return res.status(200).json(ticket);
+  }
+  catch {
+    return res.status(404).json({ message: 'Resource non found.' }); 
+  }
+}
+
 
 export const addSingleTicket = async (
   req: express.Request,
@@ -78,6 +91,7 @@ export const addSingleTicket = async (
   }
 };
 
+
 export const editSingleTicket = async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -98,6 +112,7 @@ export const editSingleTicket = async (req: Request, res: Response) => {
     return res.status(500).json({ message: err });
   }
 };
+
 
 export const deleteSingleTicket = async (req: Request, res: Response) => {
   const errors = validationResult(req);

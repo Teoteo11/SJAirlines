@@ -14,6 +14,13 @@ router.get(
   TicketController.getTickets
 );
 
+// Description: return JSOn containing one ticket by ID
+router.get('/:id', 
+  [
+    param('id').isMongoId().notEmpty()
+  ], 
+  TicketController.getTicket);
+
 // Description: add new ticket
 // ? Body params:
 router.post(
