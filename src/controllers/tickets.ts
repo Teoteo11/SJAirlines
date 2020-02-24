@@ -81,6 +81,12 @@ export const addSingleTicket = async (
     await Promise.all([
       ticket.save(),
       UserModel.updateOne(user, { $push: { ticket: ticket._id } }),
+      // FIXME: 
+      /* in realtà il numero di posti di un aereo non dovrebbe mai essere modificato,
+      perchè in realtà quella che viene modificata è la disponibilità dei posti del FLIGHT che -usa- quell'aereo,
+      non dei sedili fisici. Così è come se ogni volta che un user effettua un booking andiamo a scippare un sedile
+      all'interno dell'aereo
+      */
       AirplaneModel.findByIdAndUpdate(idAirplane, {
         numSeats: Number(numSeats) - 1
       })

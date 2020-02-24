@@ -40,6 +40,15 @@ exports.getTickets = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
 });
+exports.getTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const ticket = yield ticket_1.TicketModel.findById(req.params.id);
+        return res.status(200).json(ticket);
+    }
+    catch (_a) {
+        return res.status(404).json({ message: 'Resource non found.' });
+    }
+});
 exports.addSingleTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {

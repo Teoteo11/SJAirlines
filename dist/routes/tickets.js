@@ -18,6 +18,10 @@ router.use(body_parser_1.default.json());
 router.use(body_parser_1.default.urlencoded({ extended: true }));
 // Description: return JSON containing all tickets
 router.get("/", [express_validator_1.query("id").isMongoId(), express_validator_1.query("email").isEmail()], TicketController.getTickets);
+// Description: return JSOn containing one ticket by ID
+router.get('/:id', [
+    express_validator_1.param('id').isMongoId().notEmpty()
+], TicketController.getTicket);
 // Description: add new ticket
 // ? Body params:
 router.post("/", [express_validator_1.body("idFlight").isMongoId(), express_validator_1.body("idUser").isMongoId()], TicketController.addSingleTicket);
