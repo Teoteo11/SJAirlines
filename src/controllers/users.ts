@@ -136,10 +136,10 @@ export const addTicket = async (req: Request, res: Response) => {
     return res.status(400).json({ errors: "Unprocessable entity" });
   }
   try {
-    const [user, company, idAirplane] = await Promise.all([
+    const [user, company, flight] = await Promise.all([
       UserModel.findById(req.params.idUser),
       CompanyModel.findOne({ flights: req.body.idFlight }),
-      FlightModel.findById(req.body.idFlight).select("idAirplane")
+      FlightModel.findById(req.body.idFlight).select("-_id idAirplane") as any
     ]);
     if (!user) {
       return res.status(400).json({ message: "User not exists" });
@@ -147,11 +147,13 @@ export const addTicket = async (req: Request, res: Response) => {
     if (!company) {
       return res.status(400).json({ message: "Company not exists" });
     }
-    if (!idAirplane) {
+    if (!flight) {
       return res.status(400).json({ message: "Flight not exists" });
     }
 
-    let numSeats = await AirplaneModel.findById(idAirplane).select("numSeats");
+    let numSeats = ((await AirplaneModel.findById(flight.idAirplane).select(
+      "-_id numSeats"
+    )) as any).numSeats;
     if (Number(numSeats) === 0) {
       return res.status(400).json({ message: "Airplane full" });
     }
@@ -165,7 +167,7 @@ export const addTicket = async (req: Request, res: Response) => {
     await Promise.all([
       ticket.save(),
       UserModel.updateOne(user, { $push: { ticket: ticket._id } }),
-      AirplaneModel.findByIdAndUpdate(idAirplane, {
+      AirplaneModel.findByIdAndUpdate(flight.idAirplane, {
         numSeats: Number(numSeats) - 1
       })
     ]);

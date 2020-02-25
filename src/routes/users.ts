@@ -10,8 +10,8 @@ router.use(bodyParser.urlencoded({ extended: true }));
 // Description: return JSON containing all users
 router.get("/", UserController.getUsers);
 router.get(
-  "/:idUser/tickets",
-  [param("idUser").isMongoId()],
+  "/:idUser/ticket",
+  [param("idUser").isMongoId(), body("idFlight").isMongoId()],
   UserController.getTickets
 );
 
