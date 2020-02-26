@@ -11,7 +11,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.get("/", UserController.getUsers);
 router.get(
   "/:idUser/ticket",
-  [param("idUser").isMongoId(), body("idFlight").isMongoId()],
+  [param("idUser").isMongoId()],
   UserController.getTickets
 );
 
