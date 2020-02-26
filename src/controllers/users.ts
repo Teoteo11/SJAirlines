@@ -166,7 +166,7 @@ export const addTicket = async (req: Request, res: Response) => {
 
     await Promise.all([
       ticket.save(),
-      UserModel.updateOne(user, { $push: { ticket: ticket._id } }),
+      UserModel.updateOne(user, { $push: { tickets: ticket._id } }),
       AirplaneModel.findByIdAndUpdate(flight.idAirplane, {
         numSeats: Number(numSeats) - 1
       })
